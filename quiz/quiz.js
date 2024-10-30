@@ -695,7 +695,7 @@ async function loadNextQuestion(perguntasFiltradas) {
             <style>
                 body { 
                     //background-color: red; 
-                    font-size: calc(16px + 1vw); /* Tamanho do texto responsivo */
+                    font-size: calc(18px + 1vw); /* Tamanho do texto responsivo */
                     //color: blue; 
                     padding: 10px; 
                     margin: 0; 
@@ -749,10 +749,12 @@ async function loadNextQuestion(perguntasFiltradas) {
                         overflow-wrap: break-word;
                     }
                     button {
+                        margin: 0;
+                        font-size: calc(16px + 1vw);
                         border-radius: 4px;
                         background-color: ${getRandomColor()}; 
                         color: white; 
-                        padding: 10px; 
+                        padding: 16px; 
                         border: none; 
                         cursor: pointer; 
                         width: 100%; 

@@ -1,6 +1,6 @@
 {
-    "name": "NoteQuiz",
-    "short_name": "NQ",
+    "name": "Note Quiz",
+    "short_name": "NoteQ",
     "description": "Um app PWA para notas e jogar",
     "start_url": "./index.html",
     "display": "standalone",
