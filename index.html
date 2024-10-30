@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Notas</title>
+    <link rel="manifest" href="outros/manifest.json">
+    <link rel="stylesheet" href="notas/style.css">
+    <link rel="stylesheet" href="outros/bootstrap.min.css"> <!-- Inclua o Bootstrap -->
+    <link rel="shortcut icon" href="notas/icon-192x192.png" type="image/png">
+</head>
+
+<body class="container-fluid py-0">
+    <!-- Menu e tema -->
+    <div id="topo" class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h1 class="me-3 mb-0 ">Notas</h1> <!-- Título à esquerda -->
+        <button class="nav-link me-2" onclick="window.location.href='formatar/formatar.html'">Formatar</button>
+        <button class="nav-link me-2" onclick="window.location.href='quiz/quiz.html'">Quiz</button>
+        <input type="text" id="pesquisar" class="form-control me-3" placeholder="Pesquisar notas..."> <!-- Barra de pesquisa -->
+        <button id="toggleTema" class="btn btn-outline-secondary">
+             <span id="temaIcon">🌙</span>
+        </button> <!-- Botão de tema -->
+    </div>
+    
+    <!-- título e nota -->
+    <div class="mb-12">
+        <input type="text" id="titulo" class="form-control mb-3" placeholder="Título da nota...">
+        <input type="file" id="imagem" class="form-control mb-1" accept="image/*">
+        <textarea id="nota" class="form-control mb-2" placeholder="Digite sua nota aqui..."></textarea>
+    </div>
+    
+    <div class="mb-12">
+        <button id="abrirImportar" class="btn btn-success w-100">Importar Notas</button>
+    </div>
+    
+    <!-- Botões centrais -->
+    <!-- Botões centrais -->
+    <div id="botoes-centrais" class="row mb-2 pt-2">
+        <div class="col-6 col-md-3 mb-2">
+            <button id="salvar" class="btn btn-primary w-100">Salvar Nota</button>
+        </div>
+        <div class="col-6 col-md-3 mb-2">
+            <button class="btn btn-warning w-100" onclick="limparSessionStorage()">Limpar Campos</button>
+        </div>
+        <div class="col-6 col-md-3 mb-2">
+            <button id="exportarNotas" class="btn btn-info w-100">Exportar Notas</button>
+        </div>
+        <div class="col-6 col-md-3 mb-2">
+            <button id="excluirTodasNotas" class="btn btn-danger w-100">Excluir Tudo</button>
+        </div>
+    </div>
+
+
+    <input type="file" id="inputImportar" style="display: none;">
+
+    <!-- dropdown para filtrar notas -->
+    <div>
+
+        <select id="ordenarNotas">
+            <option value="dataRecente">Data mais recente</option>
+            <option value="dataAntiga">Data mais antiga</option>
+            <option value="alfabetica">Ordem alfabética</option>
+        </select>
+    </div>
+
+    <!-- os cards com os resultados apareceram abaixo -->
+    <div id="resultado" class="mt-4"></div>
+
+    <!-- Inclusão do Bootstrap JS -->
+    <script src="outros/bootstrap.bundle.min.js"></script>
+    <script src="notas/script.js"></script>
+</body>
+
+
+</html>

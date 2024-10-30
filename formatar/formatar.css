@@ -1,0 +1,227 @@
+
+        /*configurações dark mode*/
+        body.light-mode {
+            background-color: white;
+            color: #191a21;
+        }
+
+        body.dark-mode {
+            background-color: #202124;
+            color: white;
+        }
+
+        .dark-mode .fControlDM {
+            background-color: #35363a;
+            color: white;
+            height: 58px;
+        }
+         .fControlDM {
+            height: 58px;
+        }
+
+        .dark-mode input::placeholder {
+            color: #ccc;
+            /* Cor cinza claro para o modo claro */
+        }
+
+        .dark-mode ::placeholder {
+            color: #ccc;
+            /* Cor cinza claro para o modo claro */
+        }
+
+        /*dim configurações dark mode*/
+
+        body {
+            font-family: Arial, sans-serif;
+            padding: 14px;
+            
+        }
+
+        #btn-copiar {
+            cursor: pointer;
+        }
+
+        .form-section {
+            
+            margin-bottom: 20px;
+        }
+       
+
+        .icone-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .icone-text p {
+            margin: 0 10px;
+        }
+
+        .fcontrol1 {
+            height: 234px;
+        }
+        .dark-mode .fcontrol1 {
+            height: 234px;
+        }
+        h1, h2, h3, h4, h5, h6, p {
+            text-shadow: 2px 2px 5px rgba(168, 163, 163, 0.7);
+        }
+    /*-----------------------------------------------------*/
+    .custom-form-section {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px; /* Espaçamento entre os itens */
+    }
+    
+    .custom-form-section .form-group {
+        flex: 1; /* Faz com que cada item ocupe o mesmo espaço */
+        /*min-width: 250px;  Largura mínima para evitar que fique muito estreito */
+        background-color: #f9f9f9; /* Cor de fundo para destaque */
+        padding: 15px; /* Espaçamento interno */
+        border-radius: 8px; /* Bordas arredondadas */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    }
+    
+    .custom-form-section .form-control {
+        margin-top: 10px; /* Espaçamento entre o checkbox e o textarea */
+        width: 100%; /* Faz o textarea ocupar toda a largura do container */
+    }
+    /*------------------------------------------------------------*/
+    
+    /*---------------------subistituição-de-caracteres-------------------------*/
+    .custom-replace-section {
+        background-color: #f0f4ff; /* Cor de fundo suave */
+        padding: 20px; /* Espaçamento interno */
+        border-radius: 10px; /* Bordas arredondadas */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais forte */
+        margin-bottom: 20px; /* Espaçamento inferior */
+    }
+    
+    .custom-replace-section p {
+        font-size: 18px; /* Tamanho da fonte */
+        font-weight: bold; /* Negrito */
+        margin-bottom: 15px; /* Espaçamento abaixo do parágrafo */
+    }
+    
+    .custom-replace-section .icone-text {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    
+    .custom-replace-section .form-control {
+        border: 1px solid #007bff; /* Borda azul */
+        border-radius: 5px; /* Bordas arredondadas */
+        transition: border-color 0.3s; /* Transição suave */
+    }
+    
+    .custom-replace-section .form-control:focus {
+        border-color: #0056b3; /* Cor da borda ao focar */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra ao focar */
+    }
+    
+    .custom-replace-section .replace-icon {
+        font-size: 24px; /* Tamanho do ícone */
+        margin: 0 10px; /* Margem lateral */
+    }
+    /*--------------------fim-subistituição-de-caracteres-------------------------*/
+    /*--------------------------------tabs------------------------------*/
+    .header {
+        text-align: left; /* Alinha o texto à esquerda */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adiciona sombra nas bordas */
+        background: white; /* Fundo branco */
+        border-radius: 8px; /* Bordas arredondadas, opcional */
+        
+    }
+     
+    .custom-tab {
+        display: inline-block; /* Para que os links se alinhem horizontalmente */
+        padding: 10px 15px; /* Adiciona espaço interno para os links */
+        text-decoration: none; /* Remove o sublinhado padrão dos links */
+        color: #333; /* Cor do texto */
+        transition: background-color 0.3s; /* Efeito de transição suave */
+    }
+    
+    .custom-tab.active {
+        font-weight: bold; /* Destaque para o link ativo */
+        border-bottom: 2px solid #007bff; /* Linha sólida para o link ativo */
+        background-color: #e7f0ff; /* Cor de fundo para o ativo */
+    }
+    
+    .custom-tab:not(.active) {
+        background-color: whitesmoke; /* Cor de fundo para notas não ativas */
+        color: #666; /* Cor do texto para notas não ativas */
+        box-shadow: 0 4px 15px rgba(31, 32, 33, 0.3), 0 0 5px rgba(0, 0, 0, 0.2); /* Efeito de estufamento sem sombra embaixo */
+        transition: box-shadow 0.3s; /* Transição suave */
+    }
+    
+    .custom-tab:not(.active):hover {
+        background-color: #e0e0e0; /* Efeito ao passar o mouse em notas não ativas */
+    }
+    
+    /*------------------------------fim-tabs------------------------------*/
+    .modern-textarea {
+        height: 101px;
+        width: 100%; /* Faz o textarea ocupar toda a largura do container */
+        padding: 3px; /* Espaçamento interno */
+        border: 2px solid #007bff; /* Borda azul */
+        border-radius: 8px; /* Bordas arredondadas */
+        background-color: #f9f9f9; /* Cor de fundo suave */
+        font-size: 12px; /* Tamanho da fonte */
+        transition: border-color 0.3s, box-shadow 0.3s; /* Transições suaves */
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra interna */
+    }
+    
+    .modern-textarea:focus {
+        border-color: #0056b3; /* Cor da borda ao focar */
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2), 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra interna e externa ao focar */
+    }
+    
+    .modern-textarea[readonly] {
+        height: 74px;
+        background-color: #e9ecef; /* Cor de fundo para o textarea readonly */
+        border: 2px solid #ced4da; /* Cor da borda para readonly */
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra interna para readonly */
+    }
+    
+    #resultado {
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3), 0 -2px 5px rgba(0, 0, 0, 0.2); /* Efeito de estufamento */
+        transition: box-shadow 0.3s; /* Transição suave */
+    }
+    
+    #resultado:focus {
+        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.5), 0 -2px 5px rgba(0, 0, 0, 0.3); /* Efeito de estufamento ao focar */
+    }
+    
+    .custom-tab {
+        flex: 1; /* Faz cada item ocupar o mesmo espaço */
+        text-align: center; /* Centraliza o texto dentro de cada item */
+    }
+ /*-------------------------------*/
+
+.custom-tab {
+    
+    border: none; /* Remove bordas dos links */
+    border-radius: 0; /* Remove cantos arredondados */
+    background-color: whitesmoke; /* Cor de fundo padrão */
+    transition: background-color 0.3s; /* Transição suave */
+}
+
+.custom-tab.active {
+    
+    background-color: #e7e7e7; /* Cor de fundo para a aba ativa */
+    color: #333; /* Cor do texto para a aba ativa */
+    border-bottom: none; /* Remove a borda inferior da aba ativa */
+}
+
+.custom-tab:hover {
+    background-color: #d0d0d0; /* Cor ao passar o mouse */
+}
+.tab-content {
+    position: relative;
+    z-index: 1000;
+    margin-top: -6px;
+    padding: 11px;
+    background: rgb(255, 255, 255);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}

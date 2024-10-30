@@ -1,0 +1,818 @@
+body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #333;
+}
+
+.tabs {
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    margin-right: 10px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: rgb(185, 17, 17);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tab-button:hover {
+    background-color: #0056b3;
+}
+
+.tab-content {
+    position: relative;
+    z-index: 999;
+    margin-top: -6px;
+    padding: 11px;
+    background: rgb(255, 255, 255);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+button:hover {
+    background-color: #d7d7d7;
+}
+
+/* #opcoes {
+    margin-top: 10px;
+} */
+
+
+
+.button-group {
+    display: flex;
+    /* Para os botões ficarem lado a lado */
+    gap: 10px;
+    /* Espaçamento entre os botões */
+    margin-right: 10px;
+    /* Espaço entre os botões e o texto da pergunta */
+}
+
+li {
+    text-shadow: 2px 2px 5px rgba(168, 163, 163, 0.7);
+    /* Ajuste os valores conforme necessário */
+    display: flex;
+    /* Faz com que os itens da lista fiquem em linha */
+    align-items: center;
+    /* Alinha verticalmente o texto da pergunta e os botões */
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-group {
+    margin-right: 5px;
+}
+
+.question-text {
+    overflow: hidden;
+    /* Impede que o texto ultrapasse */
+    text-overflow: ellipsis;
+    /* Adiciona "..." no final do texto muito longo */
+    /* Não permite que o texto quebre em várias linhas */
+    flex-grow: 1;
+    /* Faz o texto ocupar o espaço disponível */
+    margin-right: 10px;
+    /* Espaçamento entre o texto e os botões */
+}
+
+.resposta-container {
+    display: flex;
+    align-items: center;
+    /* Alinha os itens verticalmente no centro */
+    margin-bottom: 10px;
+    /* Espaço entre as respostas */
+}
+
+.resposta-container input.resposta {
+    flex: 1;
+    /* Faz o campo de resposta ocupar o espaço disponível */
+    margin-right: 10px;
+    /* Espaço entre o campo de resposta e os botões */
+}
+
+.resposta-container button {
+    margin-left: 50px;
+    /* Espaço entre os botões */
+}
+
+
+
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: var(--bs-list-group-item-padding-y) var(--bs-list-group-item-padding-x);
+    color: var(--bs-list-group-color);
+    text-decoration: none;
+    background-color: var(--bs-list-group-bg);
+    border: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color);
+}
+
+.dividirNaTela {
+    display: flex;
+    flex-wrap: wrap;
+    /* Permite que os elementos se movam para a próxima linha se não houver espaço suficiente */
+}
+
+
+.textoCenter {
+    padding-top: 20px;
+    font-size: calc(1.025rem + 0.6vw);
+    text-shadow: 2px 2px 5px rgba(168, 163, 163, 0.7);
+    /* Ajuste os valores conforme necessário */
+}
+
+.dropAddPerguntas {
+    border-radius: 4px;
+    flex: 1 1 50%;
+    /* Cresce e encolhe, ocupando 50% do espaço disponível */
+    box-sizing: border-box;
+    /* Inclui padding e borda na largura total */
+    padding: 0px;
+    /* Opcional: adiciona um espaço interno */
+}
+
+@media (max-width: 600px) {
+
+    /* Ajuste o valor conforme necessário dropdawn add perguntas*/
+    .dropAddPerguntas {
+        display: flex;
+        flex: 1 1 100%;
+        /* Em telas menores, ocupam 100% cada um */
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    text-shadow: 2px 2px 5px rgba(168, 163, 163, 0.7);
+    /* Ajuste os valores conforme necessário */
+}
+
+.form-label {
+    text-shadow: 2px 2px 5px rgba(168, 163, 163, 0.7);
+    /* Ajuste os valores conforme necessário */
+}
+
+.btn {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Sombra padrão */
+    transition: box-shadow 0.3s ease;
+    /* Suaviza a transição da sombra */
+}
+
+.btn:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    /* Aumenta a sombra ao passar o mouse */
+}
+
+/*configuraçao dos botões das perguntas*/
+.button-group button {
+    border-right: 8px;
+    font-size: 1rem;
+    line-height: 1.5;
+    /* Define uma altura de linha fixa */
+    margin-right: 6px;
+    padding: 10px 15px;
+    /* Ajuste o padding conforme necessário */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.6s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+    display: inline-block;
+    /* Garante que o botão não expanda */
+}
+
+.button-group button:hover {
+    transform: scale(1.1);
+    /* Aumenta apenas a escala do botão */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    /* Pode ajustar a sombra se desejar */
+}
+
+
+/*estilizar os dropdown add perguntas*/
+#categoria-quiz,
+#categoria-select {
+    padding: 0px;
+    /* Ajuste o padding conforme necessário */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    /* Sombra padrão */
+    transition: box-shadow 0.4s ease;
+}
+
+#categoria-quiz,
+#categoria-select:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    /* Sombra padrão */
+    transition: box-shadow 0.4s ease;
+}
+
+
+
+
+
+
+/*estilizar texto dentro das perguntas na lista de pergunta*/
+span.question-text {
+    font-size: larger;
+    font-size: calc(1.010rem + 0.6vw);
+}
+
+span.details-text {
+    text-shadow: 0px 0px 0px rgba(168, 163, 163, 0.7);
+    font-size: calc(0.825rem + 0.6vw);
+}
+
+select#categoria-quiz {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+select#categoria-quiz.form-select:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    /* Aumenta a sombra ao passar o mouse */
+}
+
+.cabecalho {
+    text-align: left;
+}
+
+.justify-content-center {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    flex-wrap: wrap;
+    margin-top: -23px;
+}
+
+.textPA {
+    font-size: calc(1.025rem + 0.6vw);
+}
+
+h4 {
+    font-size: calc(0.825rem + 0.6vw);
+}
+
+/*estilos para o modal*/
+.modal {
+    display: none;
+    /* Garante que o modal esteja oculto inicialmente */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Fundo semi-transparente */
+}
+
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*fim estilos para o modal*/
+
+/*estilos para media query das respostas*/
+/*respostas para smartphones*/
+@media (max-width: 767px) {
+    /* #opcoes {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    } */
+
+    button#next-question-button.btn.btn-warning {
+        width: 100%;
+        padding-top: 13px;
+
+
+    }
+
+
+}
+
+
+
+
+
+/*respostas botões respostas para smartphones*/
+@media (max-width: 767px) {
+    .button-group button {
+        border-right: 0px;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-right: 0px;
+        padding: 0px 3px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.6s ease, box-shadow 0.3s ease;
+        margin-bottom: 8px;
+        display: inline-block;
+        /* margin: 7px;*/
+    }
+}
+
+.respons {
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+}
+
+@media (max-width: 767px) {
+    div.respons button {
+        width: 100%;
+        border-right: 8px;
+        font-size: 1rem;
+        line-height: 1.5;
+        /* Define uma altura de linha fixa */
+        margin-right: 6px;
+        padding: 15px 15px;
+        /* Ajuste o padding conforme necessário */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.6s ease, box-shadow 0.3s ease;
+        margin-bottom: 3px;
+        display: inline-block;
+        /* Garante que o botão não expanda */
+    }
+
+    .respons {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    div.respons button:hover {
+        transform: scale(1.1);
+        /* Aumenta apenas a escala do botão */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        /* Pode ajustar a sombra se desejar */
+    }
+
+}
+
+@media (min-width: 767px) {
+    div.respons button {
+        text-wrap: nowrap;
+        width: 33%;
+        border-right: 8px;
+        font-size: 1rem;
+        line-height: 1.5;
+        /* Define uma altura de linha fixa */
+        margin-right: 6px;
+        padding: 10px 15px;
+        /* Ajuste o padding conforme necessário */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.6s ease, box-shadow 0.3s ease;
+        margin-bottom: 20px;
+        display: inline-block;
+        /* Garante que o botão não expanda */
+    }
+
+    div.respons button:hover {
+        transform: scale(1.1);
+        /* Aumenta apenas a escala do botão */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        /* Pode ajustar a sombra se desejar */
+    }
+
+}
+
+.btIniciarQuis {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-direction: row;
+}
+
+
+/*cores para o modal padrão neutro
+lembre-se sempre que for usar showModalMessage tem que por qual modal quer usar 
+senão padrão neutral será usado*/
+
+.modal-content.neutral {
+    background-color: #e9ecef; /* Verde claro */
+    color: #000; /* Texto verde escuro */
+    width: 96%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+/*no pc ao passar o mouse sobre o modal neutro ou no celular ao segurar encima*/
+.modal-content.neutral:hover {
+    background-color: #e9ecef; /* Verde claro */
+    color: #000; /* Texto verde escuro */
+    width: 96%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+
+}
+/*cores para o modal resposta certa ou errada*/
+.modal-content.success {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724; /* Texto verde escuro */
+    width: 96%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.modal-content.success:hover {
+    background-color: #d4edda; /* Verde claro */
+    color: #155724; /* Texto verde escuro */
+    width: 96%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content.error {
+    background-color: #f8d7da; /* Vermelho claro */
+    color: #721c24; /* Texto vermelho escuro */
+    width: 96%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.modal-content.error:hover {
+    background-color: #f8d7da; /* Vermelho claro */
+    color: #721c24; /* Texto vermelho escuro */
+    width: 96%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+/*modal alerta amarelo*/
+.modal-content.alert {
+    
+    text-align: center;
+    background-color: #f8e1b1 ; /* Vermelho claro */
+    color: #721c24; /* Texto vermelho escuro */
+    width: 70%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.modal-content.alert:hover {
+    text-align: center;
+    font-size: 1.1rem;
+    background-color: #f8e5b7; /* amarelo alerta*/
+    color: #721c24; /* Texto vermelho escuro */
+    width: 71%;
+    pointer-events: auto;
+    background-clip: padding-box;
+    border:rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    outline: 0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+
+}
+
+/*fim cores para o modal resposta certa ou errada*/
+#modal {
+    display: none; /* Inicialmente oculto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0 0 0 / 26%); /* Fundo semi-transparente */
+}
+
+.modal-content {
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 8px; /* Bordas arredondadas */
+}
+/*oculta a aba pergunta para qe nao pisque na hora que redirecionar a pagina inicial para quiz */
+#perguntas{
+    display: none;
+}
+/*------------------------------tabs-----------------------------------*/
+.header {
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: 8px;
+}
+
+
+
+.custom-tab {
+    display: inline-block; /* Para que os links se alinhem horizontalmente */
+    padding: 10px 15px; /* Adiciona espaço interno para os links */
+    text-decoration: none; /* Remove o sublinhado padrão dos links */
+    color: #333; /* Cor do texto */
+    transition: background-color 0.3s; /* Efeito de transição suave */
+}
+
+.custom-tab.active {
+    font-weight: bold; /* Destaque para o link ativo */
+    border-bottom: 2px solid #007bff; /* Linha sólida para o link ativo */
+    background-color: #e7f0ff; /* Cor de fundo para o ativo */
+}
+
+.custom-tab:not(.active) {
+    background-color: #f9f9f9; /* Cor de fundo para notas não ativas */
+    color: #666; /* Cor do texto para notas não ativas */
+}
+
+.custom-tab:not(.active):hover {
+    background-color: #e0e0e0; /* Efeito ao passar o mouse em notas não ativas */
+}
+.respons {
+    padding-left: 8px;
+    width: 100%;
+    display: flex;
+    gap: 13px;
+    flex-wrap: nowrap;
+}
+/*------------------------------tabs-----------------------------------*/
+
+/*----------------------------------------------------*/
+textarea.resposta{
+    height: 17px;
+}
+textarea#pergunta{
+    height: 4px;
+}
+
+/*----------------------------------------------------*/
+
+.modal {
+    display: none; /* Mantém o modal escondido por padrão */
+    position: fixed;
+    z-index: 1000; /* Coloca o modal acima de outros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Permite rolagem se necessário */
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo semi-transparente */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* Centraliza */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+
+.custom-tab {
+    flex: 1; /* Faz cada item ocupar o mesmo espaço */
+    text-align: center; /* Centraliza o texto dentro de cada item */
+}
+/*-------------------------------*/
+button .custom-tabs {
+border: none; /* Remove qualquer borda */
+box-shadow: none; /* Remove qualquer sombra */
+}
+
+button .custom-tab {
+border: none; /* Remove bordas dos links */
+border-radius: 0; /* Remove cantos arredondados */
+background-color: whitesmoke; /* Cor de fundo padrão */
+transition: background-color 0.3s; /* Transição suave */
+}
+
+button .custom-tab.active {
+background-color: #e7e7e7; /* Cor de fundo para a aba ativa */
+color: #333; /* Cor do texto para a aba ativa */
+border-bottom: none; /* Remove a borda inferior da aba ativa */
+}
+
+button.custom-tab:hover {
+background-color: #d0d0d0; /* Cor ao passar o mouse */
+}
+div.nav.nav-tabs.custom-tabs{
+    
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.nav-tabs {
+    border-bottom: 1px dashed #ccc; /* Adiciona um tracejado abaixo */
+   
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adiciona sombra nas bordas */
+}
+button.nav-link.custom-tab{
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adiciona sombra nas bordas */
+    
+}
+button.custom-tab:not(.active) {
+    background-color: whitesmoke;
+    color: #666;
+    box-shadow: 0 4px 15px rgba(31, 32, 33, 0.3), 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s;
+}
+.nav-tab.nav-link{
+    margin-bottom: calc(-1* var(--bs-nav-tabs-border-width));
+    border: var(--bs-nav-tabs-border-width) solid transparent;
+    border-top-left-radius: var(--bs-nav-tabs-border-radius);
+    border-top-right-radius: var(--bs-nav-tabs-border-radius);
+}
+button.custom-tab {
+    display: inline-block; /* Para que os links se alinhem horizontalmente */
+    padding: 10px 15px; /* Adiciona espaço interno para os links */
+    text-decoration: none; /* Remove o sublinhado padrão dos links */
+    color: #333; /* Cor do texto */
+    transition: background-color 0.3s; /* Efeito de transição suave */
+}
+select#modo-jogo.form-select{
+    margin-bottom: 9px;
+    padding: 0 64px 0 0; /* Topo: 0px, Direita: 64, Baixo: 0, Esquerda: 0px */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    
+}
+select#modo-jogo.form-select:hover{
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.4s ease;
+}
+div.row.mx-auto.col-12.m-2 {
+    --bs-gutter-x: 0.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1* var(--bs-gutter-y));
+    margin-right: calc(-.5* var(--bs-gutter-x));
+    margin-left: calc(-.5* var(--bs-gutter-x));
+}
+.search-container {
+    display: flex;
+    flex-direction: column; /* Alinha em coluna para telas pequenas */
+    width: 100%;
+}
+
+#search-bar {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; /* Espaço entre input e botão em telas pequenas */
+}
+
+button.btnPesquisa {
+    width: 100%; /* Botão ocupa 100% em telas pequenas */
+    padding: 10px;
+    border-radius: 6px;
+}
+
+/* Estilos para telas grandes */
+@media (min-width: 768px) {
+    .search-container {
+        
+        flex-direction: row; /* Alinha em linha para telas grandes */
+        align-items: center; /* Centraliza verticalmente os itens */
+    }
+
+    #search-bar {
+        margin-top: 11px;
+        margin-right: 5px;
+        flex: 1; /* O campo de pesquisa ocupa o espaço restante */
+        margin-bottom: 11px; /* Remove a margem em telas grandes */
+    }
+
+    button.btnPesquisa {
+        border-radius: 3px;
+        width: auto; /* O botão tem tamanho automático */
+        padding: 10px 46px; /* Ajusta o tamanho do botão */
+        margin-left: 10px; /* Espaço entre input e botão */
+        
+    }
+}
+
+/*modal de confirmaçao*/
+/* Estilos para o Modal */
+.modalc {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    z-index: 1000; /* Exibe acima de outros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
+}
+
+.modal-contentc {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.modalc button {
+    margin: 5px;
+}
+p#pergunta-quiz.mt-3.pergunta-text{
+    word-wrap: break-word; /* Permite quebra de palavras longas */
+    overflow-wrap: break-word; /* Garante que palavras longas quebrem na linha */
+    white-space: normal; /* Permite quebras de linha automáticas */
+    max-width: 100%; /* Garante que o parágrafo não ultrapasse a largura da tela */
+}
+#pergunta-quiz {
+    word-wrap: break-word; /* Permite quebra de palavras longas */
+    overflow-wrap: break-word; /* Garante que palavras longas quebrem na linha */
+    white-space: normal; /* Permite quebras de linha automáticas */
+    max-width: 100%; /* Garante que o parágrafo não ultrapasse a largura da tela */
+}
+.question-text, .respostas-text {
+    word-wrap: break-word; /* Permite quebras de palavras longas */
+    overflow-wrap: break-word; /* Garante que palavras longas quebrem na linha */
+    white-space: normal; /* Permite quebras de linha automáticas */
+}
+ 
+#pergunta-quiz {
+    white-space: normal; /* Permite quebras de linha automáticas */
+    word-wrap: break-word; /* Permite quebra de palavras longas */
+    overflow-wrap: break-word; /* Garante que palavras longas quebrem na linha */
+}
+
+/* @media (max-width: 767px) {
+    div.respons button {
+        width: 100%;
+        border-right: 8px;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-right: 6px;
+        padding: 13px 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.6s ease, box-shadow 0.3s ease;
+        margin-bottom: 3px;
+        display: inline-block;
+    }
+} */

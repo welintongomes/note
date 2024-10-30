@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Substituir Múltiplos Caracteres em Tempo Real</title>
+    <link href="../outros/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="formatar.css" />
+    <!-- favicon -->
+    <link rel="shortcut icon" href="f-192x192.png" type="image/png">
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="nav nav-tabs custom-tabs mb-0">
+            <a class="nav-link custom-tab" href="../index.html">Notas</a>
+            <a class="nav-link custom-tab" href="../quiz/quiz.html">Quiz</a>
+            <a class="nav-link custom-tab active" href="formatar.html">Formatter</a>
+        </div>
+    </div>
+    
+    
+    
+    
+<div class="tab-content">
+    <div class="form-section">
+        <label style="padding-top: 12px;" for="texto">Insira o texto abaixo:</label>
+        <textarea id="texto" class="form-control modern-textarea" rows="3" placeholder="Digite seu texto aqui..."></textarea>
+    </div>
+    
+    <div class="form-section">
+        <h2>Resultado:</h2>
+        <textarea id="resultado" class="form-control modern-textarea" readonly rows="3"></textarea>
+    </div>
+    
+
+    <div class="row mx-auto col-12 m-2 g-2">
+        <div class="col">
+            <button id="btn-copiar" class="btn btn-primary w-100">Copiar Código</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-warning w-100" onclick="limparSessionStorage()">Limpar Campos</button>
+        </div>
+    </div>
+    
+    
+
+    <div class="form-section custom-form-section">
+        <div class="form-group">
+            <label class="form-check-label" for="presetInicio">Preset topo:
+                <input type="checkbox" id="converterInicio" class="form-check-input" />
+                Converter?
+            </label>
+            <textarea id="presetInicio" class="form-control " rows="2"
+                placeholder="Insira o valor fixo para o início"></textarea>
+        </div>
+    
+        <div class="form-group">
+            <label class="form-check-label" for="presetFinal">Preset fim:
+                <input type="checkbox" id="converterFinal" class="form-check-input" />
+                Converter?
+            </label>
+            <textarea id="presetFinal" class="form-control " rows="2"
+                placeholder="Insira o valor fixo para o final"></textarea>
+        </div>
+    </div>
+    
+
+    <div class="form-section custom-replace-section">
+        <p>Quais caracteres quer substituir?</p>
+        <div class="row icone-text">
+            <div class="col-md-5">
+                <input type="text" id="charOriginal" class="form-control " placeholder="Substituir: Ia,olá,9" />
+            </div>
+            <div class="col-md-1 text-center">
+                <span class="replace-icon">➡️</span> <!-- Ícone de substituição -->
+            </div>
+            <div class="col-md-5">
+                <input type="text" id="charNovo" class="form-control " placeholder="Por: a,b,c" />
+            </div>
+        </div>
+    </div>
+    
+    <!-- botão switch para mudar o tema -->
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="themeSwitch" />
+        <label class="form-check-label" for="themeSwitch">Modo Escuro</label>
+    </div>
+    <!-- -------------------------------------------------------------------------------------------------------- -->
+    <!-- botões para salvar arquivos com os caracteres e carregar no indexedDB -->
+    <div class="row mx-auto col-12 col-lg-12 mb-2 g-2">
+        <div class="col">
+            <button id="btnSalvarPreset" class="btn w-100 btn-primary">Salvar Preset</button>
+        </div>
+        <div class="col">
+            <button id="btnCarregarPresets" class="btn w-100 btn-secondary">Carregar Presets</button>
+        </div>
+    </div>
+    
+    <ul id="listaPresets"></ul>
+    
+    <script src="../outros/crypto-js.min.js"></script>
+    <script src="../outros/bootstrap.bundle.min.js"></script>
+    
+    <div class="row mx-auto col-12 col-lg-12 mb-2 g-2">
+        <div class="col">
+            <button id="btnSalvarArquivo" class="btn w-100 btn-primary">
+                Salvar Preset e Substituições em Arquivo
+            </button>
+        </div>
+        <div class="col">
+            <button id="btnCarregarArquivo" class="btn w-100 btn-secondary">
+                Carregar Preset e Substituições de Arquivo
+            </button>
+        </div>
+    </div>
+    
+    <input type="file" id="fileInput" style="display: none" />
+
+    <script src="formatar.js"></script>
+
+</body>
+
+</html>
