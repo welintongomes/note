@@ -736,37 +736,38 @@ async function loadNextQuestion(perguntasFiltradas) {
         respostaIframe.style.border = "none";
         respostaIframe.style.borderRadius = "4px";
 
-        const respostaHTML = `
-            <html>
-            <head>
-                <style>
-                    body { 
-                        font-size: calc(14px + 0.8vw); /* Tamanho do texto responsivo */
-                        padding: 10px; 
-                        margin: 0; 
-                        box-sizing: border-box; 
-                        //text-align: center; 
-                        overflow-wrap: break-word;
-                    }
-                    button {
-                        margin: 0;
-                        font-size: calc(16px + 1vw);
-                        border-radius: 4px;
-                        background-color: ${getRandomColor()}; 
-                        color: white; 
-                        padding: 16px; 
-                        border: none; 
-                        cursor: pointer; 
-                        width: 100%; 
-                        box-sizing: border-box; 
-                    }
-                </style>
-            </head>
-            <body>
-                <button onclick="parent.checkAnswer(${index})">${resposta}</button>
-            </body>
-            </html>
-        `;
+const respostaHTML = `
+        <html>
+        <head>
+            <style>
+                body { 
+                    font-size: calc(14px + 0.8vw); /* Tamanho do texto responsivo */
+                    padding: 0; /* Remova o padding */
+                    margin: 0; 
+                    box-sizing: border-box; 
+                    overflow-wrap: break-word;
+                    display: flex; /* Ativa flexbox */
+                    flex-direction: column; /* Organiza botões em coluna */
+                    gap: 2px; /* Espaçamento mínimo entre botões */
+                }
+                button {
+                    font-size: calc(16px + 1vw);
+                    border-radius: 4px;
+                    background-color: ${getRandomColor()}; 
+                    color: white; 
+                    padding: 10px; /* Ajuste o padding conforme necessário */
+                    border: none; 
+                    cursor: pointer; 
+                    width: 100%; /* Ocupa 100% da largura do iframe */
+                    box-sizing: border-box; 
+                }
+            </style>
+        </head>
+        <body>
+            <button onclick="parent.checkAnswer(${index})">${resposta}</button>
+        </body>
+        </html>
+    `;
 
         respostaIframe.srcdoc = respostaHTML;
 
