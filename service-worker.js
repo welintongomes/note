@@ -1,4 +1,9 @@
-const CACHE_NAME = `meu-site-cache-${new Date().getTime()}`; // Nome dinâmico de cache
+// v-79 Cria um nome dinâmico para o cache, incluindo um identificador de versão
+//cada alteração neste arquivo vai gerar uma nova versão do cache funciona tanto aqui no vscode quando no github
+//entao o site e atualizado quando o usuario fecha o navegador no smartphone, no pc nen precisa fechar
+// Mude esta versão manualmente a cada alteração relevante
+const CACHE_VERSION = 'v1.0.3'; //subindo e baixando repositorio da nuvem
+const CACHE_NAME = `meu-site-cache-${CACHE_VERSION}`;
 const urlsToCache = [
     './',
     './index.html',
@@ -30,55 +35,146 @@ const urlsToCache = [
     './quiz/q-192x192.png',
 ];
 
-// Instala o service worker e faz o cache dos arquivos
-self.addEventListener('install', function(event) {
+// Instala e faz o cache dos arquivos da nova versão
+self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log('Cache inicializado com os arquivos');
+            .then((cache) => {
+                console.log('Cache atualizado com sucesso!');
                 return cache.addAll(urlsToCache);
             })
+            .then(() => self.skipWaiting())
+            .catch((error) => console.error('Falha ao adicionar arquivos ao cache:', error))
     );
 });
 
-// Ativa o service worker e limpa caches antigos, se necessário
-self.addEventListener('activate', function(event) {
+// Ativa o novo Service Worker e limpa caches antigos
+self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(cacheName) {
+        caches.keys().then((cacheNames) =>
+            Promise.all(
+                cacheNames.map((cacheName) => {
                     if (cacheName !== CACHE_NAME) {
-                        console.log('Limpando cache antigo:', cacheName);
                         return caches.delete(cacheName);
                     }
                 })
-            );
-        })
+            )
+        )
     );
+    return self.clients.claim(); // Assume controle da página imediatamente
 });
 
-// Estrategia de fetch que busca atualização na rede e fallback para cache
-self.addEventListener('fetch', function(event) {
-    // Filtra apenas as requisições com 'http' ou 'https' no início
-    if (!event.request.url.startsWith('http')) return;
+// Verifica e atualiza automaticamente os usuários com versões desatualizadas
+self.addEventListener('fetch', (event) => {
+    // Verifica se o método é GET; se não for, ignora o cache
+    if (event.request.method !== 'GET') {
+        return;
+    }
 
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(response) {
-                if (response) {
-                    return response; // Retorna do cache se disponível
+    const requestUrl = event.request.url;
+
+    if (requestUrl.includes('gist.githubusercontent.com')) {
+        // Busca diretamente sem usar cache para o Gist
+        event.respondWith(fetch(event.request));
+    } else {
+        event.respondWith(
+            caches.match(event.request).then((cachedResponse) => {
+                if (cachedResponse) {
+                    return cachedResponse;
                 }
-                return fetch(event.request)
-                    .then(function(fetchResponse) {
-                        return caches.open(CACHE_NAME).then(function(cache) {
-                            // Apenas cacheia as respostas 'http' ou 'https' para evitar erros
-                            if (event.request.url.startsWith('http')) {
-                                cache.put(event.request, fetchResponse.clone());
-                            }
-                            return fetchResponse;
-                        });
+
+                if (event.request.url.startsWith('http')) {
+                    return fetch(event.request).then((networkResponse) => {
+                        if (networkResponse && networkResponse.status === 200) {
+                            const responseClone = networkResponse.clone();
+
+                            caches.open(CACHE_NAME).then((cache) => {
+                                cache.put(event.request, responseClone).catch((error) => {
+                                    console.warn('Falha ao salvar no cache:', error);
+                                });
+                            });
+                        }
+                        return networkResponse;
+                    }).catch((error) => {
+                        console.error('Erro ao buscar recurso:', error);
+                        throw error;
                     });
+                }
+
+                return fetch(event.request);
             })
-    );
+        );
+    }
 });
 
+
+// self.addEventListener('fetch', (event) => {
+//     event.respondWith(
+//         // Ignora o cache apenas para requisições do Gist
+//         event.request.url.includes("gist.githubusercontent.com")
+//             ? fetch(event.request)
+//             : caches.match(event.request).then((cachedResponse) => {
+//                 if (cachedResponse) {
+//                     return cachedResponse;
+//                 }
+
+//                 // Verifica se a URL usa o esquema 'http' ou 'https'
+//                 if (event.request.url.startsWith('http')) {
+//                     return fetch(event.request).then((networkResponse) => {
+//                         if (networkResponse && networkResponse.status === 200) {
+//                             const responseClone = networkResponse.clone();
+
+//                             caches.open(CACHE_NAME).then((cache) => {
+//                                 cache.put(event.request, responseClone).catch((error) => {
+//                                     console.warn('Falha ao salvar no cache:', error);
+//                                 });
+//                             });
+//                         }
+//                         return networkResponse;
+//                     }).catch((error) => {
+//                         console.error('Erro ao buscar recurso:', error);
+//                         throw error;
+//                     });
+//                 }
+
+//                 // Retorna a resposta da rede para esquemas não 'http'/'https'
+//                 return fetch(event.request);
+//             })
+//     );
+// });
+
+// self.addEventListener('fetch', (event) => {
+//     event.respondWith(
+//         caches.match(event.request).then((cachedResponse) => {
+//             // Retorna a resposta do cache, se houver
+//             if (cachedResponse) {
+//                 return cachedResponse;
+//             }
+
+//             // Verifica se o esquema da URL é 'http' ou 'https'
+//             if (event.request.url.startsWith('http')) {
+//                 // Se não estiver no cache, faz a requisição de rede
+//                 return fetch(event.request).then((networkResponse) => {
+//                     // Verifica se a resposta pode ser clonada e tem status 200
+//                     if (networkResponse && networkResponse.status === 200) {
+//                         // Tenta clonar a resposta apenas se possível
+//                         const responseClone = networkResponse.clone();
+
+//                         caches.open(CACHE_NAME).then((cache) => {
+//                             cache.put(event.request, responseClone).catch((error) => {
+//                                 console.warn('Falha ao salvar no cache:', error);
+//                             });
+//                         });
+//                     }
+//                     return networkResponse;
+//                 }).catch((error) => {
+//                     console.error('Erro ao buscar recurso:', error);
+//                     throw error;
+//                 });
+//             }
+
+//             // Caso o esquema não seja 'http' ou 'https', retorna a resposta de rede
+//             return fetch(event.request);
+//         })
+//     );
+// });

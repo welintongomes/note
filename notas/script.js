@@ -489,13 +489,17 @@ if ('serviceWorker' in navigator) {
         .then(function (registration) {
             console.log('Service Worker registrado com sucesso:', registration.scope);
             
-            // Verifica se existe um SW novo esperando para ser ativado
+            // Detecta atualização do service worker
             registration.onupdatefound = function () {
                 const newWorker = registration.installing;
+
                 newWorker.onstatechange = function () {
                     if (newWorker.state === 'activated') {
                         console.log('Novo Service Worker ativado. Atualizando cache.');
-                        window.location.reload();
+                        // Somente recarrega a página quando o novo SW controla a página
+                        if (navigator.serviceWorker.controller) {
+                            window.location.reload();
+                        }
                     }
                 };
             };

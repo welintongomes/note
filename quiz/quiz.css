@@ -329,6 +329,7 @@ h4 {
     } */
 
     button#next-question-button.btn.btn-warning {
+        margin-top: 16px;
         width: 100%;
         padding-top: 13px;
 
@@ -337,7 +338,6 @@ h4 {
 
 
 }
-
 
 
 
@@ -817,3 +817,61 @@ p#pergunta-quiz.mt-3.pergunta-text{
     }
 } */
 
+/* div#opcoes{
+    padding: 0px;
+    margin: -25px;
+    color: red;
+} */
+body {
+    margin: 0; /* Remove margens padrão do body */
+}
+
+.range-container {
+    width: 100vw; /* O contêiner ocupa toda a largura da viewport */
+    max-width: 100%; /* Garante que não ultrapasse a largura da tela */
+    margin: 20px auto; /* Centraliza e adiciona margem superior/inferior */
+}
+
+.range-slider {
+    -webkit-appearance: none;/*nao sei o que significa este alerta mais nao afeta em nada aparentemente*/
+    width: 100%; /* O controle ocupa 100% da largura do contêiner */
+    height: 8px;
+    background: linear-gradient(to right, #4caf50, #ffa500, #f44336);
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity .2s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.range-slider:hover {
+    opacity: 1;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #4caf50;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.range-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid #4caf50;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
