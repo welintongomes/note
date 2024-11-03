@@ -2,7 +2,7 @@
 //cada alteração neste arquivo vai gerar uma nova versão do cache funciona tanto aqui no vscode quando no github
 //entao o site e atualizado quando o usuario fecha o navegador no smartphone, no pc nen precisa fechar
 // Mude esta versão manualmente a cada alteração relevante
-const CACHE_VERSION = 'v1.0.2'; //subindo e baixando repositorio da nuvem
+const CACHE_VERSION = 'v1.0.3'; //subindo e baixando repositorio da nuvem
 const CACHE_NAME = `meu-site-cache-${CACHE_VERSION}`;
 const urlsToCache = [
     './',
@@ -106,75 +106,3 @@ self.addEventListener('fetch', (event) => {
         );
     }
 });
-
-
-// self.addEventListener('fetch', (event) => {
-//     event.respondWith(
-//         // Ignora o cache apenas para requisições do Gist
-//         event.request.url.includes("gist.githubusercontent.com")
-//             ? fetch(event.request)
-//             : caches.match(event.request).then((cachedResponse) => {
-//                 if (cachedResponse) {
-//                     return cachedResponse;
-//                 }
-
-//                 // Verifica se a URL usa o esquema 'http' ou 'https'
-//                 if (event.request.url.startsWith('http')) {
-//                     return fetch(event.request).then((networkResponse) => {
-//                         if (networkResponse && networkResponse.status === 200) {
-//                             const responseClone = networkResponse.clone();
-
-//                             caches.open(CACHE_NAME).then((cache) => {
-//                                 cache.put(event.request, responseClone).catch((error) => {
-//                                     console.warn('Falha ao salvar no cache:', error);
-//                                 });
-//                             });
-//                         }
-//                         return networkResponse;
-//                     }).catch((error) => {
-//                         console.error('Erro ao buscar recurso:', error);
-//                         throw error;
-//                     });
-//                 }
-
-//                 // Retorna a resposta da rede para esquemas não 'http'/'https'
-//                 return fetch(event.request);
-//             })
-//     );
-// });
-
-// self.addEventListener('fetch', (event) => {
-//     event.respondWith(
-//         caches.match(event.request).then((cachedResponse) => {
-//             // Retorna a resposta do cache, se houver
-//             if (cachedResponse) {
-//                 return cachedResponse;
-//             }
-
-//             // Verifica se o esquema da URL é 'http' ou 'https'
-//             if (event.request.url.startsWith('http')) {
-//                 // Se não estiver no cache, faz a requisição de rede
-//                 return fetch(event.request).then((networkResponse) => {
-//                     // Verifica se a resposta pode ser clonada e tem status 200
-//                     if (networkResponse && networkResponse.status === 200) {
-//                         // Tenta clonar a resposta apenas se possível
-//                         const responseClone = networkResponse.clone();
-
-//                         caches.open(CACHE_NAME).then((cache) => {
-//                             cache.put(event.request, responseClone).catch((error) => {
-//                                 console.warn('Falha ao salvar no cache:', error);
-//                             });
-//                         });
-//                     }
-//                     return networkResponse;
-//                 }).catch((error) => {
-//                     console.error('Erro ao buscar recurso:', error);
-//                     throw error;
-//                 });
-//             }
-
-//             // Caso o esquema não seja 'http' ou 'https', retorna a resposta de rede
-//             return fetch(event.request);
-//         })
-//     );
-// });

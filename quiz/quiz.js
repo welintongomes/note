@@ -1084,28 +1084,50 @@ function importDatabase(event) {//importal local
     reader.readAsText(file);
 }//fim importar local
 
-// funçao para limpar dados do site
+// // funçao para limpar dados do site
+// function clearSiteCache() {
+//     if ('caches' in window) {
+//         caches.keys().then((cacheNames) => {
+//             return Promise.all(
+//                 cacheNames.map((cacheName) => {
+//                     // Apaga todos os caches do site
+//                     return caches.delete(cacheName);
+//                 })
+//             );
+//         }).then(() => {
+//             console.log("Cache do site limpo com sucesso!");
+//         }).catch((error) => {
+//             console.error("Erro ao limpar o cache do site:", error);
+//         });
+//     }
+// }
+// Função para limpar dados do site e retornar uma Promise
 function clearSiteCache() {
-    if ('caches' in window) {
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    // Apaga todos os caches do site
-                    return caches.delete(cacheName);
-                })
-            );
-        }).then(() => {
-            console.log("Cache do site limpo com sucesso!");
-        }).catch((error) => {
-            console.error("Erro ao limpar o cache do site:", error);
-        });
-    }
+    return new Promise((resolve, reject) => {
+        if ('caches' in window) {
+            caches.keys().then((cacheNames) => {
+                return Promise.all(
+                    cacheNames.map((cacheName) => {
+                        return caches.delete(cacheName);
+                    })
+                );
+            }).then(() => {
+                console.log("Cache do site limpo com sucesso!");
+                resolve(); // Resolve a Promise
+            }).catch((error) => {
+                console.error("Erro ao limpar o cache do site:", error);
+                reject(error); // Reject a Promise em caso de erro
+            });
+        } else {
+            resolve(); // Resolve caso caches não esteja disponível
+        }
+    });
 }
 //fim funçao para limpar dados do site
 
 //export nuvem
 // Variáveis globais para o token do GitHub e ID do Gist
-const GITHUB_TOKEN = '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'; // Substitua pelo seu token do GitHub
+const GITHUB_TOKEN = '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'; // Substitua pelo seu token do GitHub
 const GIST_ID = '349a8a424ff90fe3d50dc51ed731b2a5'; // Substitua pelo ID do Gist desejado
 
 // Função para exportar o banco de dados para o Gist
@@ -1150,51 +1172,52 @@ function exportDatabaseNuvem() {
 }
 //fim Função para exportar o banco de dados para o Gist
 
-//importar dados gist do github
+// Função para importar dados do Gist
 function importDatabaseFromGist() {
-    //limpa o cache do site primeiro
-    clearSiteCache();
-    //depois faz o restante da função
-    fetch(`https://api.github.com/gists/${GIST_ID}`, {
-        headers: {
-            "Authorization": `token ${GITHUB_TOKEN}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Erro ao carregar os dados do Gist');
-        }
-        return response.json();
-    })
-    .then(gistData => {
-        // Extrai o conteúdo do arquivo quiz.json
-        const fileContent = gistData.files["quiz.json"].content;
-        const data = JSON.parse(fileContent);
+    // Chama a função para limpar o cache e aguarda sua conclusão
+    clearSiteCache().then(() => {
+        // Depois que o cache é limpo, faz a requisição para o Gist
+        fetch(`https://api.github.com/gists/${GIST_ID}`, {
+            headers: {
+                "Authorization": `token ${GITHUB_TOKEN}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao carregar os dados do Gist');
+            }
+            return response.json();
+        })
+        .then(gistData => {
+            const fileContent = gistData.files["quiz.json"].content;
+            const data = JSON.parse(fileContent);
 
-        const transaction = db.transaction(["questions"], "readwrite");
-        const store = transaction.objectStore("questions");
+            const transaction = db.transaction(["questions"], "readwrite");
+            const store = transaction.objectStore("questions");
 
-        // Limpa o banco antes de importar novas perguntas
-        const clearRequest = store.clear();
-        clearRequest.onsuccess = function () {
-            // Adiciona cada item do JSON ao banco
-            data.forEach(item => {
-                store.put(item);
-            });
+            // Limpa o banco antes de importar novas perguntas
+            const clearRequest = store.clear();
+            clearRequest.onsuccess = function () {
+                data.forEach(item => {
+                    store.put(item);
+                });
 
-            // Atualiza a lista de perguntas e categorias após a importação
-            loadQuestions(); 
-            loadCategorias();
-            alertaConclusao();
-            showModalMessage("Banco de dados importado com sucesso do Gist!", 'success');
-        };
-    })
-    .catch(error => {
+                loadQuestions(); 
+                loadCategorias();
+                alertaConclusao();
+                showModalMessage("Banco de dados importado com sucesso do Gist!", 'success');
+            };
+        })
+        .catch(error => {
+            alertaTempo();
+            showModalMessage("Erro ao importar o banco de dados do Gist: " + error.message, 'error');
+        });
+    }).catch(error => {
         alertaTempo();
-        showModalMessage("Erro ao importar o banco de dados do Gist: " + error.message, 'error');
+        showModalMessage("Erro ao limpar o cache: " + error.message, 'error');
     });
 }
-//fim importar dados gist do github
+//fim Função para importar dados do Gist
 
 // Função para tocar o som nos modais
 function alertaSucesso() {
