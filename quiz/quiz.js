@@ -1084,23 +1084,6 @@ function importDatabase(event) {//importal local
     reader.readAsText(file);
 }//fim importar local
 
-// // funçao para limpar dados do site
-// function clearSiteCache() {
-//     if ('caches' in window) {
-//         caches.keys().then((cacheNames) => {
-//             return Promise.all(
-//                 cacheNames.map((cacheName) => {
-//                     // Apaga todos os caches do site
-//                     return caches.delete(cacheName);
-//                 })
-//             );
-//         }).then(() => {
-//             console.log("Cache do site limpo com sucesso!");
-//         }).catch((error) => {
-//             console.error("Erro ao limpar o cache do site:", error);
-//         });
-//     }
-// }
 // Função para limpar dados do site e retornar uma Promise
 function clearSiteCache() {
     return new Promise((resolve, reject) => {
@@ -1126,98 +1109,53 @@ function clearSiteCache() {
 //fim funçao para limpar dados do site
 
 //export nuvem
-// Variáveis globais para o token do GitHub e ID do Gist
-const GITHUB_TOKEN = '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'; // Substitua pelo seu token do GitHub
-const GIST_ID = '349a8a424ff90fe3d50dc51ed731b2a5'; // Substitua pelo ID do Gist desejado
 
-// Função para exportar o banco de dados para o Gist
-function exportDatabaseNuvem() {
-    const transaction = db.transaction(["questions"], "readonly");
-    const store = transaction.objectStore("questions");
-    const request = store.getAll();
-
-    request.onsuccess = function (event) {
-        const data = event.target.result;
-        const json = JSON.stringify(data);
-
-        fetch(`https://api.github.com/gists/${GIST_ID}`, {
-            method: "PATCH", // Usando PATCH para atualizar o Gist existente
-            headers: {
-                "Authorization": `token ${GITHUB_TOKEN}`,
-                "Accept": "application/vnd.github.v3+json"
-            },
-            body: JSON.stringify({
-                description: "Backup de dados do quiz",
-                files: {
-                    "quiz.json": {
-                        content: json
-                    }
-                }
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.html_url) {
-                console.log('Gist atualizado com sucesso:', data.html_url);
-                showModalMessage("Dados exportados com sucesso! Link: " + data.html_url, 'success');
-            } else {
-                console.error('Erro ao atualizar o Gist:', data);
-                showModalMessage("Erro ao atualizar o Gist:", 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Erro na requisição:', error);
-        });
-    };
-}
 //fim Função para exportar o banco de dados para o Gist
 
 // Função para importar dados do Gist
+// IDs dos Gists públicos
+const IMPORT_GIST_ID = '91b30f2ab4db553ac595d17e69c8a095'; // Substitua pelo ID do seu Gist de importação
+
+// Função para importar dados do Gist público
 function importDatabaseFromGist() {
-    // Chama a função para limpar o cache e aguarda sua conclusão
+    // Limpa o cache do site
     clearSiteCache().then(() => {
-        // Depois que o cache é limpo, faz a requisição para o Gist
-        fetch(`https://api.github.com/gists/${GIST_ID}`, {
-            headers: {
-                "Authorization": `token ${GITHUB_TOKEN}`
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erro ao carregar os dados do Gist');
-            }
-            return response.json();
-        })
-        .then(gistData => {
-            const fileContent = gistData.files["quiz.json"].content;
-            const data = JSON.parse(fileContent);
+        fetch(`https://api.github.com/gists/${IMPORT_GIST_ID}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar os dados do Gist');
+                }
+                return response.json();
+            })
+            .then(gistData => {
+                const fileContent = gistData.files["quiz_import.json"].content; // Nome do arquivo no Gist
+                const data = JSON.parse(fileContent);
 
-            const transaction = db.transaction(["questions"], "readwrite");
-            const store = transaction.objectStore("questions");
+                const transaction = db.transaction(["questions"], "readwrite");
+                const store = transaction.objectStore("questions");
 
-            // Limpa o banco antes de importar novas perguntas
-            const clearRequest = store.clear();
-            clearRequest.onsuccess = function () {
-                data.forEach(item => {
-                    store.put(item);
-                });
+                // Limpa o banco antes de importar novas perguntas
+                const clearRequest = store.clear();
+                clearRequest.onsuccess = function () {
+                    data.forEach(item => {
+                        store.put(item);
+                    });
 
-                loadQuestions(); 
-                loadCategorias();
-                alertaConclusao();
-                showModalMessage("Banco de dados importado com sucesso do Gist!", 'success');
-            };
-        })
-        .catch(error => {
-            alertaTempo();
-            showModalMessage("Erro ao importar o banco de dados do Gist: " + error.message, 'error');
-        });
+                    loadQuestions(); 
+                    loadCategorias();
+                    alertaConclusao();
+                    showModalMessage("Banco de dados importado com sucesso do Gist!", 'success');
+                };
+            })
+            .catch(error => {
+                alertaTempo();
+                showModalMessage("Erro ao importar o banco de dados do Gist: " + error.message, 'error');
+            });
     }).catch(error => {
         alertaTempo();
         showModalMessage("Erro ao limpar o cache: " + error.message, 'error');
     });
-}
-//fim Função para importar dados do Gist
+}//fim Função para importar dados do Gist
 
 // Função para tocar o som nos modais
 function alertaSucesso() {
