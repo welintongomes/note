@@ -23,11 +23,11 @@
     </div>
 
     <!-- Modal for displaying messages -->
-<div id="modal" style="display:none;">
-    <div id="modal-content" style="width: 94%; max-height: 90vh; overflow-y: auto;">
-        <iframe id="modal-iframe" style="width:94%; border:none; min-height: 50px;"></iframe>
+    <div id="modal" style="display:none;">
+        <div id="modal-content" style="width: 94%; max-height: 90vh; overflow-y: auto;">
+            <iframe id="modal-iframe" style="width:94%; border:none; min-height: 50px;"></iframe>
+        </div>
     </div>
-</div>
 
 
 
@@ -143,9 +143,11 @@
         <div class="respons">
 
             <!-- Botão para selecionar arquivo -->
-            <button accesskey="a" title="ALT+A Importar Arquivo" id="uploadButton" class="btn btn-primary"onclick="document.getElementById('fileInput').click();">Importar Localmente</button>
-            <button class="btn btn-secondary"onclick="importDatabaseFromGist()">Importar da Nuvem</button>
-            <button accesskey="d" title="ALT+D Exportar Arquivo" class="btn btn-secondary"onclick="exportDatabase()">Exportar Localmente</button>
+            <button accesskey="a" title="ALT+A Importar Arquivo" id="uploadButton" class="btn btn-primary"
+                onclick="document.getElementById('fileInput').click();">Importar Localmente</button>
+            <button class="btn btn-secondary" onclick="importDatabaseFromGist()">Importar da Nuvem</button>
+            <button accesskey="d" title="ALT+D Exportar Arquivo" class="btn btn-secondary"
+                onclick="exportDatabase()">Exportar Localmente</button>
             <button class="btn btn-danger" onclick="deleteAllQuestions()">Excluir Todas as Perguntas</button>
         </div>
 
@@ -253,6 +255,18 @@
 
         <div>
             Score Global: <span id="global-score">0</span>
+            
+            <label for="idioma">Idioma:</label>
+            <select id="idioma">
+                <option value="pt-BR">Português (Brasil)</option>
+                <option value="en-US">Inglês (EUA)</option>
+                <option value="es-ES">Espanhol (Espanha)</option>
+                <!-- Adicione mais opções conforme necessário -->
+            </select>
+
+            <label for="voz">Voz:</label>
+            <select id="voz"></select>
+
         </div>
 
     </div>

@@ -690,6 +690,7 @@ async function loadNextQuestion(perguntasFiltradas) {
     const randomIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[randomIndex];
     usedQuestions.push(perguntasDisponiveis.indexOf(currentQuestion));
+    // Exibe a pergunta e as opções na tela
 
     // HTML para a pergunta responsiva
     const perguntaHTML = `
@@ -741,6 +742,7 @@ async function loadNextQuestion(perguntasFiltradas) {
     // Ajusta a altura do iframe da pergunta automaticamente
     iframePergunta.onload = function () {
         iframePergunta.style.height = iframePergunta.contentWindow.document.body.scrollHeight + 'px';
+        readQuestion();
     };
 
 
@@ -815,15 +817,150 @@ async function loadNextQuestion(perguntasFiltradas) {
 
         opcoesDiv.appendChild(respostaIframe);
     });
-
+    // readAnswer();
+    
+   
     if (tempo) {
         startTimer(tempo);
     } else {
         document.getElementById("next-question-button").disabled = false;
     }
 
+
 }
-//fim funçao iniciar o quiz ------------------------------------------------------------------------------
+//vozes idiomas
+const idiomaSelect = document.getElementById("idioma");
+const vozSelect = document.getElementById("voz");
+let vozesDisponiveis = [];
+
+// Função para carregar e listar as vozes
+function carregarVozes() {
+    vozesDisponiveis = speechSynthesis.getVoices();
+
+    // Limpa o menu de vozes
+    vozSelect.innerHTML = '';
+
+    // Adiciona as vozes no menu suspenso
+    vozesDisponiveis.forEach((voz) => {
+        const option = document.createElement("option");
+        option.value = voz.name;
+        option.textContent = `${voz.name} (${voz.lang})`;
+        vozSelect.appendChild(option);
+    });
+}
+
+// Atualize as vozes quando a lista mudar
+speechSynthesis.onvoiceschanged = carregarVozes;
+
+// Interrompe a leitura quando a página é recarregada ou o usuário sai
+window.addEventListener("beforeunload", () => {
+    speechSynthesis.cancel();
+});
+//fim //vozes idiomas
+
+// Função para sintetizar 
+// Função para limpar tags HTML, caracteres especiais (&lt;...&gt;) e conteúdo dentro das tags
+function cleanText(text) {
+    // Cria um elemento temporário para manipular o HTML
+    //funçao exelente que pega o conteudo para poder manipular antes de ler
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = text;
+
+    // Remove qualquer conteúdo entre &lt; e &gt;
+    tempDiv.innerHTML = tempDiv.innerHTML.replace(/&lt;[^&]*&gt;/g, '');
+
+    // Remove qualquer conteúdo dentro das tags HTML como <h1>texto</h1>
+    tempDiv.innerHTML = tempDiv.innerHTML.replace(/<[^>]*>[^<]*<\/[^>]*>/g, '');
+
+    // Extrai apenas o texto visível do elemento
+    return tempDiv.textContent || tempDiv.innerText || '';
+}
+// Função para sintetizar a fala
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        // Interrompe qualquer fala em andamento
+        speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Define o idioma selecionado
+        const idiomaSelecionado = idiomaSelect.value;
+        utterance.lang = idiomaSelecionado;
+
+        // Define a voz selecionada
+        const nomeVozSelecionada = vozSelect.value;
+        const vozSelecionada = vozesDisponiveis.find(voz => voz.name === nomeVozSelecionada);
+        if (vozSelecionada) {
+            utterance.voice = vozSelecionada;
+        }
+
+        // Fala o texto
+        speechSynthesis.speak(utterance);
+    } else {
+        console.log("API de síntese de voz não é suportada neste navegador.");
+    }
+}
+
+
+// Função para ler apenas a pergunta
+function readQuestion() {
+    // Interrompe qualquer leitura em andamento
+    speechSynthesis.cancel();
+    const textoLimpo = cleanText(currentQuestion.pergunta);
+    speakText(textoLimpo);
+}
+//função para ler as respostas
+// Função para ler as respostas
+
+// function readAnswer() {
+//     const opcoesDiv = document.getElementById("opcoes");
+//     const respostaIframes = opcoesDiv.getElementsByTagName("iframe");
+
+//     // Função para ler cada resposta com um pequeno atraso para evitar sobreposição
+//     const readResponsesSequentially = async () => {
+//         for (let i = 0; i < respostaIframes.length; i++) {
+//             const iframe = respostaIframes[i];
+//             // Acessa o conteúdo do iframe e obtém o texto do botão
+//             const respostaContent = iframe.contentWindow.document.body.innerText;
+
+//             // Log para verificar se o conteúdo do iframe está acessível
+//             console.log(`Conteúdo do iframe ${i}:`, respostaContent);
+
+//             const cleanedAnswer = cleanText(respostaContent); // Limpa a resposta
+//             console.log(`Resposta limpa ${i}:`, cleanedAnswer); // Log para a resposta limpa
+
+//             if (cleanedAnswer) {
+//                 console.log(`Lendo a resposta ${i}:`, cleanedAnswer); // Log para saber o que está sendo lido
+//                 await speakText(cleanedAnswer); // Aguarda a fala terminar antes de continuar
+//             } else {
+//                 console.log(`Resposta ${i} está vazia ou não foi encontrada.`); // Log para respostas vazias
+//             }
+//         }
+//     };
+
+//     readResponsesSequentially();
+// }
+
+
+//fim função para ler as respostas
+
+// Função para ler o conteúdo do modal
+function readModalContent() {
+    // Interrompe qualquer leitura em andamento
+    speechSynthesis.cancel();
+
+    // Obtém o conteúdo do modal e limpa o texto
+    const modalIframe = document.getElementById("modal-iframe");
+    const modalDoc = modalIframe.contentDocument || modalIframe.contentWindow.document;
+    const modalText = modalDoc.body.innerHTML;
+    const textoLimpo = cleanText(modalText);
+
+    // Lê o texto limpo do modal
+    speakText(textoLimpo);
+}
+//Fim Função para ler o conteúdo do modal
+
+//fim Função para sintetizar
 
 //funçao de timer de tempo --------------------------------------------------------------------------------
 function startTimer(tempoLimite) {
@@ -839,24 +976,32 @@ function startTimer(tempoLimite) {
             document.getElementById("timer").textContent = "Tempo esgotado!";
             alertaTempo();
             await showModalMessage("Tempo esgotado!", 'error', 'error'); // Aguarda o fechamento do modal
-            handleTimeOut(); // Chama a função após o modal ser fechado
+            console.log("Tempo esgotado! Chamada para handleTimeOut...");
+            handleTimeOut(); // Certifique-se de que esta função é chamada após o modal ser fechado
         }
     }, 1000);
 }
 
 function handleTimeOut() {
-    // Penalidades por tempo esgotado
     const modoJogo = document.getElementById("modo-jogo").value;
-    switch (modoJogo) {
-        case "hard":
-            scores[currentCategory]--; // Perde 1 ponto na categoria atual
-            break;
-        case "impossivel":
-            scores[currentCategory] -= 2; // Perde 2 pontos na categoria atual
-            break;
+    console.log(`Modo de jogo: ${modoJogo}`);
+    console.log(`Score antes da penalidade: ${scores[currentCategory]}`);
+
+    // Aplica penalidade de acordo com o modo de jogo numérico
+    if (modoJogo === "2") { // Difícil
+        scores[currentCategory] -= 1;
+        console.log("Penalidade aplicada: -1 ponto (Difícil)");
+    } else if (modoJogo === "3") { // Impossível
+        scores[currentCategory] -= 2;
+        console.log("Penalidade aplicada: -2 pontos (Impossível)");
+    } else {
+        console.warn(`Modo de jogo não aplica penalidade: ${modoJogo}`);
     }
+    // Atualiza o score global e exibe o valor atualizado na interface
     updateGlobalScore(); // Atualiza o score global após penalidade por tempo
     document.getElementById("score").textContent = scores[currentCategory];
+    console.log(`Score atualizado após penalidade: ${scores[currentCategory]}`);
+    // Salva o score e carrega a próxima pergunta
     saveScore(); // Salva o score
     loadNextQuestion(questions.filter(q => q.categoria === currentCategory)); // Carrega a próxima pergunta
 }
@@ -1141,7 +1286,7 @@ function importDatabaseFromGist() {
                         store.put(item);
                     });
 
-                    loadQuestions(); 
+                    loadQuestions();
                     loadCategorias();
                     alertaConclusao();
                     showModalMessage("Banco de dados importado com sucesso do Gist!", 'success');
@@ -1189,17 +1334,25 @@ function closeModal() {
     const modalContent = document.getElementById("modal-content");
     modalContent.className = "modal-content"; // Reseta as classes
 
+    // Interrompe a leitura de voz ao fechar o modal
+    speechSynthesis.cancel();
+
     if (resolveModalPromise) {
         resolveModalPromise(); // Resolve a promessa quando o modal é fechado
         resolveModalPromise = null; // Limpa a referência
     }
 }
+
 //fim função para fechar o modal
 
+
+//fim função para leitura do modal
 /*cores para o modal padrão neutro
 lembre-se sempre que for usar showModalMessage tem que por qual type de modal vai querer usar 
 se nao especificar o padrão neutral será usado*/
 function showModalMessage(message, type) {
+    speechSynthesis.cancel();
+
     const formattedMessage = message.replace(/&gt;/g, '<').replace(/&lt;/g, '>');
     const modalContent = document.getElementById("modal-content");
     const iframe = document.getElementById("modal-iframe");
@@ -1252,8 +1405,12 @@ function showModalMessage(message, type) {
         const iframeBody = doc.body;
         const contentHeight = iframeBody.scrollHeight;
         iframe.style.height = `${Math.max(contentHeight, 50)}px`; // 50px é a altura mínima para mensagens curtas
+        // Espera o carregamento completo antes de iniciar a leitura do conteúdo do modal
+        setTimeout(() => {
+            const cleanModalText = cleanText(formattedMessage);
+            speakText(cleanModalText);
+        }, 100); // Adiciona um pequeno atraso para garantir consistência
     };
-
     // Exibe o modal
     document.getElementById("modal").style.display = "block";
 
@@ -1272,6 +1429,7 @@ window.onclick = function (event) {
         closeModal();
     }
 };
+
 
 //service worker para funcionar offline otimizado para atualizar automaticamente com timestamp
 // Registra o service worker
