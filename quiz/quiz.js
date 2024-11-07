@@ -828,33 +828,66 @@ async function loadNextQuestion(perguntasFiltradas) {
 
 }
 //vozes idiomas
+// Seletores dos elementos dropdown
 const idiomaSelect = document.getElementById("idioma");
 const vozSelect = document.getElementById("voz");
 let vozesDisponiveis = [];
 
-// Função para carregar e listar as vozes
+// Função para carregar e listar todas as vozes no menu de vozes
 function carregarVozes() {
     vozesDisponiveis = speechSynthesis.getVoices();
 
+    // Verifica se as vozes foram carregadas; caso contrário, tenta novamente
+    if (vozesDisponiveis.length === 0) {
+        setTimeout(carregarVozes, 100);
+        return;
+    }
+
+    // Limpa o menu de idiomas
+    idiomaSelect.innerHTML = '';
+
+    // Filtra idiomas únicos com base na primeira parte do código, ex.: "en", "es"
+    const idiomasUnicos = [...new Set(vozesDisponiveis.map(voz => voz.lang.split("-")[0]))];
+    
+    // Adiciona opções ao menu de idiomas
+    idiomasUnicos.forEach(idioma => {
+        const option = document.createElement("option");
+        option.value = idioma;
+        option.textContent = idioma;
+        idiomaSelect.appendChild(option);
+    });
+
+    // Exibe todas as vozes inicialmente
+    atualizarVozes();
+}
+
+// Função para atualizar as vozes com base no idioma selecionado
+function atualizarVozes() {
+    const idiomaSelecionado = idiomaSelect.value; // Exemplo: "en" para inglês
+    
     // Limpa o menu de vozes
     vozSelect.innerHTML = '';
 
-    // Adiciona as vozes no menu suspenso
-    vozesDisponiveis.forEach((voz) => {
-        const option = document.createElement("option");
-        option.value = voz.name;
-        option.textContent = `${voz.name} (${voz.lang})`;
-        vozSelect.appendChild(option);
-    });
+    // Filtra e adiciona as vozes no dropdown de acordo com o idioma selecionado
+    vozesDisponiveis
+        .filter(voz => voz.lang.startsWith(idiomaSelecionado)) // Mostra variantes do idioma selecionado
+        .forEach((voz) => {
+            const option = document.createElement("option");
+            option.value = voz.name;
+            option.textContent = `${voz.name} (${voz.lang})`;
+            vozSelect.appendChild(option);
+        });
 }
 
-// Atualize as vozes quando a lista mudar
+// Atualiza as vozes quando a lista mudar
 speechSynthesis.onvoiceschanged = carregarVozes;
 
-// Interrompe a leitura quando a página é recarregada ou o usuário sai
-window.addEventListener("beforeunload", () => {
-    speechSynthesis.cancel();
-});
+// Chama `atualizarVozes` sempre que o idioma é alterado
+idiomaSelect.addEventListener("change", atualizarVozes);
+
+// Carrega todas as vozes no início
+carregarVozes();
+
 //fim //vozes idiomas
 
 // Função para sintetizar 

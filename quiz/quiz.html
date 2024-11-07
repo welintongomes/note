@@ -253,25 +253,55 @@
         </div>
 
 
-        <div>
-            Score Global: <span id="global-score">0</span>
-            
-
-            <label for="idioma">Idioma:</label>
-            <select id="idioma">
-                <option value="pt-BR">Português (Brasil)</option>
-                <option value="en-US">Inglês (EUA)</option>
-                <option value="es-ES">Espanhol (Espanha)</option>
-                <!-- Adicione mais opções conforme necessário -->
-            </select>
-
-            <label for="voz">Voz:</label>
-            <select id="voz"></select>
-            <label><input type="checkbox" id="lerPerguntaCheckbox" checked> Ler Pergunta</label>
-            <label><input type="checkbox" id="lerRespostasCheckbox" checked> Ler Respostas</label>
-            <label><input type="checkbox" id="lerModalCheckbox" checked> Ler Modal</label>
+        <div class="container mt-5">
+            <div class="row">
+                <!-- Score Global -->
+                <div class="col-12 text-center mb-4">
+                    <span>Score Global: </span><span id="global-score">0</span>
+                </div>
+            </div>
+        
+            <div class="row">
+                <!-- Idioma -->
+                <div class="col-12 col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <label for="idioma" class="form-label mb-0 me-2">Idioma:</label>
+                        <select id="idioma" class="form-select">
+                            <option value="pt-BR">Português (Brasil)</option>
+                            <option value="en-US">Inglês (EUA)</option>
+                            <option value="es-ES">Espanhol (Espanha)</option>
+                        </select>
+                    </div>
+                </div>
+        
+                <!-- Voz -->
+                <div class="col-12 col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        <label for="voz" class="form-label mb-0 me-2">Voz:</label>
+                        <select id="voz" class="form-select"></select>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row">
+                <!-- Checkboxes -->
+                <div class="col-12 d-flex justify-content-between">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="lerPerguntaCheckbox" checked>
+                        <label class="form-check-label" for="lerPerguntaCheckbox">Ler Pergunta</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="lerRespostasCheckbox" checked>
+                        <label class="form-check-label" for="lerRespostasCheckbox">Ler Respostas</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="lerModalCheckbox" checked>
+                        <label class="form-check-label" for="lerModalCheckbox">Ler Modal</label>
+                    </div>
+                </div>
+            </div>
         </div>
-
+        
     </div>
     </div>
     <!-- ------------------------------ começa aqui as inportações de audio para os alertas ------------------- -->
