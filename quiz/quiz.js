@@ -833,6 +833,10 @@ const idiomaSelect = document.getElementById("idioma");
 const vozSelect = document.getElementById("voz");
 let vozesDisponiveis = [];
 
+// Definindo o idioma e a voz padrão (por exemplo, "es" para espanhol e "Google Español" como voz)
+const idiomaPadrao = 'pt';  // Aqui você escolhe o idioma como 'es' para espanhol, 'en' para inglês, etc.
+const vozPadrao = 'Google português do Brasil';  // Nome da voz específica que você quer como padrão, pode ser 'Google español' ou outra voz.
+
 // Função para carregar e listar todas as vozes no menu de vozes
 function carregarVozes() {
     vozesDisponiveis = speechSynthesis.getVoices();
@@ -859,6 +863,14 @@ function carregarVozes() {
 
     // Exibe todas as vozes inicialmente
     atualizarVozes();
+        // Definir idioma padrão (por exemplo, "es" para espanhol)
+        idiomaSelect.value = idiomaPadrao;  // Define o idioma para 'es' (espanhol)
+        atualizarVozes();  // Atualiza as vozes de acordo com o idioma
+    
+        // Definir a voz padrão (por exemplo, "Google español")
+        if (vozSelect.options.length > 0) {
+            vozSelect.value = vozPadrao; // Define a voz para 'Google español' ou a voz que você escolheu
+        }
 }
 
 // Função para atualizar as vozes com base no idioma selecionado
