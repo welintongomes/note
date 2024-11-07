@@ -834,7 +834,7 @@ const vozSelect = document.getElementById("voz");
 let vozesDisponiveis = [];
 
 // Definindo o idioma e a voz padrão (por exemplo, "es" para espanhol e "Google Español" como voz)
-const idiomaPadrao = 'pt';  // Aqui você escolhe o idioma como 'es' para espanhol, 'en' para inglês, etc.
+const idiomaPadrao = 'pt_BR';  // Aqui você escolhe o idioma como 'es' para espanhol, 'en' para inglês, etc.
 const vozPadrao = 'Google português do Brasil';  // Nome da voz específica que você quer como padrão, pode ser 'Google español' ou outra voz.
 
 // Função para carregar e listar todas as vozes no menu de vozes
