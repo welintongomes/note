@@ -2,7 +2,7 @@
 //cada alteração neste arquivo vai gerar uma nova versão do cache funciona tanto aqui no vscode quando no github
 //entao o site e atualizado quando o usuario fecha o navegador no smartphone, no pc nen precisa fechar
 // Mude esta versão manualmente a cada alteração relevante
-const CACHE_VERSION = 'v1.0.2'; //subindo e baixando repositorio da nuvem
+const CACHE_VERSION = 'v1.0.3'; //subindo e baixando repositorio da nuvem
 const CACHE_NAME = `meu-site-cache-${CACHE_VERSION}`;
 const urlsToCache = [
     './',
