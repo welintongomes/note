@@ -742,7 +742,6 @@ async function loadNextQuestion(perguntasFiltradas) {
     // Ajusta a altura do iframe da pergunta automaticamente
     iframePergunta.onload = function () {
         iframePergunta.style.height = iframePergunta.contentWindow.document.body.scrollHeight + 'px';
-        readQuestion();
     };
 
 
@@ -754,6 +753,7 @@ async function loadNextQuestion(perguntasFiltradas) {
     const respostasComIndices = currentQuestion.respostas.map((resposta, index) => ({ resposta, index }));
     shuffleArray(respostasComIndices);
 
+ 
     // Cria um iframe para cada resposta com estilo responsivo
     respostasComIndices.forEach(({ resposta, index }) => {
         const respostaIframe = document.createElement("iframe");
@@ -817,9 +817,8 @@ async function loadNextQuestion(perguntasFiltradas) {
 
         opcoesDiv.appendChild(respostaIframe);
     });
-    // readAnswer();
-    
-   
+    // Chame as funções para exibir a pergunta e iniciar a leitura
+    readQuestionAndAnswers();
     if (tempo) {
         startTimer(tempo);
     } else {
@@ -876,89 +875,71 @@ function cleanText(text) {
     return tempDiv.textContent || tempDiv.innerText || '';
 }
 // Função para sintetizar a fala
-function speakText(text) {
+function speakText(text, callback) {
     if ('speechSynthesis' in window) {
-        // Interrompe qualquer fala em andamento
         speechSynthesis.cancel();
-
         const utterance = new SpeechSynthesisUtterance(text);
 
-        // Define o idioma selecionado
-        const idiomaSelecionado = idiomaSelect.value;
-        utterance.lang = idiomaSelecionado;
+        utterance.lang = idiomaSelect.value;
+        const vozSelecionada = vozesDisponiveis.find(voz => voz.name === vozSelect.value);
+        if (vozSelecionada) utterance.voice = vozSelecionada;
 
-        // Define a voz selecionada
-        const nomeVozSelecionada = vozSelect.value;
-        const vozSelecionada = vozesDisponiveis.find(voz => voz.name === nomeVozSelecionada);
-        if (vozSelecionada) {
-            utterance.voice = vozSelecionada;
-        }
-
-        // Fala o texto
+        utterance.onend = callback; // Chama a função de callback quando a fala termina
         speechSynthesis.speak(utterance);
     } else {
         console.log("API de síntese de voz não é suportada neste navegador.");
     }
 }
 
+// Função para ler a pergunta e as respostas em sequência
+function readQuestionAndAnswers() {
+    const lerPergunta = document.getElementById("lerPerguntaCheckbox").checked;
+    const lerRespostas = document.getElementById("lerRespostasCheckbox").checked;
 
-// Função para ler apenas a pergunta
-function readQuestion() {
-    // Interrompe qualquer leitura em andamento
-    speechSynthesis.cancel();
-    const textoLimpo = cleanText(currentQuestion.pergunta);
-    speakText(textoLimpo);
+    if (lerPergunta) {
+        // Lê a pergunta primeiro, e só depois verifica se deve ler as respostas
+        const textoPergunta = cleanText(currentQuestion.pergunta);
+        speakText(textoPergunta, () => {
+            if (lerRespostas) {
+                const respostas = currentQuestion.respostas.map(cleanText);
+                readAnswersSequentially(respostas, 0);
+            }
+        });
+    } else if (lerRespostas) {
+        // Se só ler respostas estiver selecionado
+        const respostas = currentQuestion.respostas.map(cleanText);
+        readAnswersSequentially(respostas, 0);
+    }
 }
-//função para ler as respostas
-// Função para ler as respostas
 
-// function readAnswer() {
-//     const opcoesDiv = document.getElementById("opcoes");
-//     const respostaIframes = opcoesDiv.getElementsByTagName("iframe");
+// Função para ler as respostas uma por uma
+function readAnswersSequentially(respostas, index) {
+    if (index < respostas.length) {
+        speakText(respostas[index], () => readAnswersSequentially(respostas, index + 1));
+    }
+}
 
-//     // Função para ler cada resposta com um pequeno atraso para evitar sobreposição
-//     const readResponsesSequentially = async () => {
-//         for (let i = 0; i < respostaIframes.length; i++) {
-//             const iframe = respostaIframes[i];
-//             // Acessa o conteúdo do iframe e obtém o texto do botão
-//             const respostaContent = iframe.contentWindow.document.body.innerText;
+// // Função para ler apenas a pergunta
+// function readQuestion() {
+//     // Interrompe qualquer leitura em andamento
+//     speechSynthesis.cancel();
+//     const textoLimpo = cleanText(currentQuestion.pergunta);
+//     speakText(textoLimpo);
 
-//             // Log para verificar se o conteúdo do iframe está acessível
-//             console.log(`Conteúdo do iframe ${i}:`, respostaContent);
+//     // Inicia a leitura das respostas após um pequeno atraso
+//     setTimeout(readAnswers, 1000); // 1 segundo de atraso entre a leitura da pergunta e das respostas
+// }//fim Função para ler apenas a pergunta
 
-//             const cleanedAnswer = cleanText(respostaContent); // Limpa a resposta
-//             console.log(`Resposta limpa ${i}:`, cleanedAnswer); // Log para a resposta limpa
+// // Função para ler todas as respostas em sequência
+// function readAnswers() {
+//     const respostas = currentQuestion.respostas.map(cleanText); // Limpa o texto de cada resposta
 
-//             if (cleanedAnswer) {
-//                 console.log(`Lendo a resposta ${i}:`, cleanedAnswer); // Log para saber o que está sendo lido
-//                 await speakText(cleanedAnswer); // Aguarda a fala terminar antes de continuar
-//             } else {
-//                 console.log(`Resposta ${i} está vazia ou não foi encontrada.`); // Log para respostas vazias
-//             }
-//         }
-//     };
-
-//     readResponsesSequentially();
+//     respostas.forEach((resposta, index) => {
+//         setTimeout(() => {
+//             speakText(resposta);
+//         }, index * 2000); // Atraso de 2 segundos entre cada resposta para evitar sobreposição
+//     });
 // }
-
-
-//fim função para ler as respostas
-
-// Função para ler o conteúdo do modal
-function readModalContent() {
-    // Interrompe qualquer leitura em andamento
-    speechSynthesis.cancel();
-
-    // Obtém o conteúdo do modal e limpa o texto
-    const modalIframe = document.getElementById("modal-iframe");
-    const modalDoc = modalIframe.contentDocument || modalIframe.contentWindow.document;
-    const modalText = modalDoc.body.innerHTML;
-    const textoLimpo = cleanText(modalText);
-
-    // Lê o texto limpo do modal
-    speakText(textoLimpo);
-}
-//Fim Função para ler o conteúdo do modal
 
 //fim Função para sintetizar
 
@@ -1344,7 +1325,20 @@ function closeModal() {
 }
 
 //fim função para fechar o modal
+// Função para ler o conteúdo do modal
+function readModalContent() {
+    // Interrompe qualquer leitura em andamento
+    speechSynthesis.cancel();
 
+    // Obtém o conteúdo do modal e limpa o texto
+    const modalIframe = document.getElementById("modal-iframe");
+    const modalDoc = modalIframe.contentDocument || modalIframe.contentWindow.document;
+    const modalText = modalDoc.body.innerHTML;
+    const textoLimpo = cleanText(modalText);
+
+    // Lê o texto limpo do modal
+    speakText(textoLimpo);
+}
 
 //fim função para leitura do modal
 /*cores para o modal padrão neutro
@@ -1353,6 +1347,7 @@ se nao especificar o padrão neutral será usado*/
 function showModalMessage(message, type) {
     speechSynthesis.cancel();
 
+    const lerModal = document.getElementById("lerModalCheckbox").checked;
     const formattedMessage = message.replace(/&gt;/g, '<').replace(/&lt;/g, '>');
     const modalContent = document.getElementById("modal-content");
     const iframe = document.getElementById("modal-iframe");
@@ -1406,11 +1401,12 @@ function showModalMessage(message, type) {
         const contentHeight = iframeBody.scrollHeight;
         iframe.style.height = `${Math.max(contentHeight, 50)}px`; // 50px é a altura mínima para mensagens curtas
         // Espera o carregamento completo antes de iniciar a leitura do conteúdo do modal
+        if(lerModal){
         setTimeout(() => {
             const cleanModalText = cleanText(formattedMessage);
             speakText(cleanModalText);
         }, 100); // Adiciona um pequeno atraso para garantir consistência
-    };
+    };}
     // Exibe o modal
     document.getElementById("modal").style.display = "block";
 
