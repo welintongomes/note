@@ -827,7 +827,6 @@ async function loadNextQuestion(perguntasFiltradas) {
 
 
 }
-//vozes idiomas
 // Seletores dos elementos dropdown
 const idiomaSelect = document.getElementById("idioma");
 const vozSelect = document.getElementById("voz");
@@ -839,10 +838,9 @@ const vozPadrao = 'Google português do Brasil';  // Nome da voz de português q
 
 // Função para carregar e listar todas as vozes no menu de vozes
 function carregarVozes() {
-    // Tenta obter as vozes disponíveis
     vozesDisponiveis = speechSynthesis.getVoices();
 
-    // Se as vozes ainda não foram carregadas, tenta novamente
+    // Verifica se as vozes foram carregadas; caso contrário, tenta novamente
     if (vozesDisponiveis.length === 0) {
         setTimeout(carregarVozes, 100);
         return;
@@ -865,13 +863,16 @@ function carregarVozes() {
     // Atualiza as vozes e define o idioma e voz padrão
     atualizarVozes();
 
-    // Define o idioma para 'pt' (português) e atualiza as vozes
-    idiomaSelect.value = idiomaPadrao;
-    atualizarVozes();  // Atualiza as vozes de acordo com o idioma selecionado
+    // Verifica se há um idioma armazenado no navegador (localStorage ou cookie)
+    const idiomaArmazenado = localStorage.getItem('idioma') || idiomaPadrao;  // Se não houver, usa 'pt' como padrão
+    idiomaSelect.value = idiomaArmazenado;
 
-    // Após carregar as vozes, define a voz padrão para "Google português do Brasil"
+    // Atualiza as vozes conforme o idioma selecionado
+    atualizarVozes();
+
+    // Define a voz padrão para "Google português do Brasil" ou outra voz se disponível
     if (vozSelect.options.length > 0) {
-        vozSelect.value = vozPadrao; // Define a voz como 'Google português do Brasil' se disponível
+        vozSelect.value = vozPadrao;
     }
 }
 
@@ -902,10 +903,15 @@ function atualizarVozes() {
 speechSynthesis.onvoiceschanged = carregarVozes;
 
 // Chama `atualizarVozes` sempre que o idioma é alterado
-idiomaSelect.addEventListener("change", atualizarVozes);
+idiomaSelect.addEventListener("change", function() {
+    // Armazena o idioma selecionado no localStorage
+    localStorage.setItem('idioma', idiomaSelect.value);
+    atualizarVozes();
+});
 
 // Carrega todas as vozes no início
 carregarVozes();
+
 
 
 // Função para sintetizar 
