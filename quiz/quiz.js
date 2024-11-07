@@ -903,10 +903,12 @@ function cleanText(text) {
 
     // Remove qualquer conteúdo dentro das tags HTML como <h1>texto</h1>
     tempDiv.innerHTML = tempDiv.innerHTML.replace(/<[^>]*>[^<]*<\/[^>]*>/g, '');
-
     // Extrai apenas o texto visível do elemento
-    return tempDiv.textContent || tempDiv.innerText || '';
-}
+    const cleanedText = tempDiv.textContent || tempDiv.innerText || '';
+    // Remove a palavra "Descrição:" do texto
+    return cleanedText.replace("Descrição:", "").trim();
+
+}//fim Função para limpar o texto 
 // Função para sintetizar a fala
 function speakText(text, callback) {
     if ('speechSynthesis' in window) {
