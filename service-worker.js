@@ -114,12 +114,18 @@ self.addEventListener('fetch', (event) => {
                                     });
                                 });
                             }
-                            return networkResponse;
+                            return networkResponse || new Response('Falha na resposta da rede', {
+                                status: 500,
+                                statusText: 'Erro na rede',
+                            }); // Caso o fetch falhe, cria uma resposta de erro
                         })
                         .catch((error) => {
                             // Se a rede falhar, retorna uma resposta alternativa (offline)
                             console.error('Erro ao buscar recurso:', error);
-                            return caches.match('/offline.html');  // Exemplo de página offline
+                            return caches.match('/offline.html') || new Response('Página não encontrada', {
+                                status: 404,
+                                statusText: 'Página não encontrada',
+                            }); // Garantir que sempre retornará uma resposta válida
                         });
                 }
 
@@ -128,3 +134,5 @@ self.addEventListener('fetch', (event) => {
             })
     );
 });
+
+
