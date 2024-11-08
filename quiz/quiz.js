@@ -827,6 +827,9 @@ async function loadNextQuestion(perguntasFiltradas) {
 
 
 }
+
+
+// Função para idiomas 
 // Seletores dos elementos dropdown
 const idiomaSelect = document.getElementById("idioma");
 const vozSelect = document.getElementById("voz");
@@ -912,7 +915,7 @@ idiomaSelect.addEventListener("change", function() {
 // Carrega todas as vozes no início
 carregarVozes();
 
-
+// Fim Função para idiomas 
 
 // Função para sintetizar 
 // Função para limpar tags HTML, caracteres especiais (&lt;...&gt;) e conteúdo dentro das tags

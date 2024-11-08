@@ -1,5 +1,5 @@
 // Versão do cache e nome dinâmico
-const CACHE_VERSION = 'v1.0.2'; 
+const CACHE_VERSION = 'v1.0.3'; 
 const CACHE_NAME = `meu-site-cache-${CACHE_VERSION}`;
 const urlsToCache = [
     '/',
@@ -27,7 +27,7 @@ const urlsToCache = [
     '/quiz/errou.mp3',
     '/quiz/fracasso.mp3',
     '/quiz/timeout.mp3',
-    '/quiz/q-192x192.png',
+    '/quiz/q-192x192.png'
 ];
 
 // Instala e cacheia os arquivos
@@ -36,12 +36,25 @@ self.addEventListener('install', (event) => {
         caches.open(CACHE_NAME)
             .then((cache) => {
                 console.log('Cache atualizado com sucesso!');
+                
+                // Adiciona log para cada arquivo sendo adicionado ao cache
+                urlsToCache.forEach((url) => {
+                    console.log(`Tentando adicionar o arquivo ao cache: ${url}`);
+                });
+
+                // Tenta adicionar todos os arquivos ao cache
                 return cache.addAll(urlsToCache);
             })
-            .then(() => self.skipWaiting())
-            .catch((error) => console.error('Falha ao adicionar arquivos ao cache:', error))
+            .then(() => {
+                console.log('Todos os arquivos foram adicionados ao cache com sucesso!');
+                self.skipWaiting();
+            })
+            .catch((error) => {
+                console.error('Falha ao adicionar arquivos ao cache:', error);
+            })
     );
 });
+
 
 // Ativa o Service Worker e limpa caches antigos
 self.addEventListener('activate', (event) => {
