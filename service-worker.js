@@ -2,8 +2,8 @@
 const CACHE_VERSION = 'v1.0.3'; 
 const CACHE_NAME = `meu-site-cache-${CACHE_VERSION}`;
 const urlsToCache = [
-    '/',
-    '/index.html',
+    './',
+    './index.html',
     './notas/icon-192x192.png',
     './notas/icon-512x512.png',
     './notas/style.css',
