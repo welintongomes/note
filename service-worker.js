@@ -1,33 +1,33 @@
 // Versão do cache e nome dinâmico
-const CACHE_VERSION = 'v1.0.3'; 
+const CACHE_VERSION = 'v1.0.2'; 
 const CACHE_NAME = `meu-site-cache-${CACHE_VERSION}`;
 const urlsToCache = [
     '/',
-    '/index.html',
-    '/notas/icon-192x192.png',
-    '/notas/icon-512x512.png',
-    '/notas/style.css',
-    '/notas/script.js',
+    './index.html',
+    './notas/icon-192x192.png',
+    './notas/icon-512x512.png',
+    './notas/style.css',
+    './notas/script.js',
 
-    '/outros/bootstrap.bundle.min.js',
-    '/outros/bootstrap.min.css',
-    '/outros/manifest.json',
-    '/outros/crypto-js.min.js',
+    './outros/bootstrap.bundle.min.js',
+    './outros/bootstrap.min.css',
+    './outros/manifest.json',
+    './outros/crypto-js.min.js',
 
-    '/formatar/formatar.html',
-    '/formatar/formatar.css',
-    '/formatar/formatar.js',
-    '/formatar/f-192x192.png',
+    './formatar/formatar.html',
+    './formatar/formatar.css',
+    './formatar/formatar.js',
+    './formatar/f-192x192.png',
 
-    '/quiz/quiz.html',
-    '/quiz/quiz.css',
-    '/quiz/quiz.js',
-    '/quiz/acertou.mp3',
-    '/quiz/conclusao.mp3',
-    '/quiz/errou.mp3',
-    '/quiz/fracasso.mp3',
-    '/quiz/timeout.mp3',
-    '/quiz/q-192x192.png'
+    './quiz/quiz.html',
+    './quiz/quiz.css',
+    './quiz/quiz.js',
+    './quiz/acertou.mp3',
+    './quiz/conclusao.mp3',
+    './quiz/errou.mp3',
+    './quiz/fracasso.mp3',
+    './quiz/timeout.mp3',
+    './quiz/q-192x192.png'
 ];
 
 // Instala e cacheia os arquivos
@@ -36,24 +36,28 @@ self.addEventListener('install', (event) => {
         caches.open(CACHE_NAME)
             .then((cache) => {
                 console.log('Cache atualizado com sucesso!');
-                
-                // Adiciona log para cada arquivo sendo adicionado ao cache
-                urlsToCache.forEach((url) => {
-                    console.log(`Tentando adicionar o arquivo ao cache: ${url}`);
-                });
-
-                // Tenta adicionar todos os arquivos ao cache
-                return cache.addAll(urlsToCache);
+                return Promise.all(
+                    urlsToCache.map((url) => {
+                        return fetch(url)
+                            .then((response) => {
+                                if (response.ok) {
+                                    console.log(`Recurso encontrado: ${url}`);
+                                    return cache.put(url, response.clone());
+                                } else {
+                                    console.error(`Falha ao obter o arquivo: ${url}`);
+                                }
+                            })
+                            .catch((error) => {
+                                console.error(`Erro ao buscar arquivo ${url}:`, error);
+                            });
+                    })
+                );
             })
-            .then(() => {
-                console.log('Todos os arquivos foram adicionados ao cache com sucesso!');
-                self.skipWaiting();
-            })
-            .catch((error) => {
-                console.error('Falha ao adicionar arquivos ao cache:', error);
-            })
+            .then(() => self.skipWaiting())
+            .catch((error) => console.error('Erro ao tentar abrir cache:', error))
     );
 });
+
 
 
 // Ativa o Service Worker e limpa caches antigos
