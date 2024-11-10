@@ -1288,43 +1288,48 @@ function importDatabase(event) {//importal local
     reader.readAsText(file);
 }//fim importar local
 
+//importar uma categoria do dropdown que está no gist
 // Função para limpar dados do site e retornar uma Promise
-function clearSiteCache() {
-    return new Promise((resolve, reject) => {
-        if ('caches' in window) {
-            caches.keys().then((cacheNames) => {
-                return Promise.all(
-                    cacheNames.map((cacheName) => {
-                        return caches.delete(cacheName);
-                    })
-                );
-            }).then(() => {
-                console.log("Cache do site limpo com sucesso!");
-                resolve(); // Resolve a Promise
-            }).catch((error) => {
-                console.error("Erro ao limpar o cache do site:", error);
-                reject(error); // Reject a Promise em caso de erro
-            });
-        } else {
-            resolve(); // Resolve caso caches não esteja disponível
-        }
-    });
-}
+// function clearSiteCache() {
+//     return new Promise((resolve, reject) => {
+//         if ('caches' in window) {
+//             caches.keys().then((cacheNames) => {
+//                 return Promise.all(
+//                     cacheNames.map((cacheName) => {
+//                         return caches.delete(cacheName);
+//                     })
+//                 );
+//             }).then(() => {
+//                 console.log("Cache do site limpo com sucesso!");
+//                 resolve(); // Resolve a Promise
+//             }).catch((error) => {
+//                 console.error("Erro ao limpar o cache do site:", error);
+//                 reject(error); // Reject a Promise em caso de erro
+//             });
+//         } else {
+//             resolve(); // Resolve caso caches não esteja disponível
+//         }
+//     });
+// }
 //fim funçao para limpar dados do site
-
-//export nuvem
-
-//fim Função para exportar o banco de dados para o Gist
+// importar uma categoria do dropdown que está no gist
+// Função para mostrar mensagens no status
+function showStatusMessage(message, type) {
+    const statusMessageElement = document.getElementById('statusMessage');
+    statusMessageElement.textContent = message;
+    statusMessageElement.style.color = type === 'success' ? 'green' : 'red';
+}
 
 // Função para importar dados do Gist
-// IDs dos Gists públicos
-const IMPORT_GIST_ID = '91b30f2ab4db553ac595d17e69c8a095'; // Substitua pelo ID do seu Gist de importação
+function importDatabaseFromGist(gistId) {
+    if (!gistId) {
+        showStatusMessage("Por favor, selecione uma categoria para importar.", 'error');
+        return;
+    }
 
-// Função para importar dados do Gist público
-function importDatabaseFromGist() {
     // Limpa o cache do site
     clearSiteCache().then(() => {
-        fetch(`https://api.github.com/gists/${IMPORT_GIST_ID}`)
+        fetch(`https://api.github.com/gists/${gistId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Erro ao carregar os dados do Gist');
@@ -1348,18 +1353,43 @@ function importDatabaseFromGist() {
                     loadQuestions();
                     loadCategorias();
                     alertaConclusao();
-                    showModalMessage("Banco de dados importado com sucesso do Gist!", 'success');
+                    showStatusMessage("Banco de dados importado com sucesso do Gist!", 'success');
                 };
             })
             .catch(error => {
                 alertaTempo();
-                showModalMessage("Erro ao importar o banco de dados do Gist: " + error.message, 'error');
+                showStatusMessage("Erro ao importar o banco de dados do Gist: " + error.message, 'error');
             });
     }).catch(error => {
         alertaTempo();
-        showModalMessage("Erro ao limpar o cache: " + error.message, 'error');
+        showStatusMessage("Erro ao limpar o cache: " + error.message, 'error');
     });
-}//fim Função para importar dados do Gist
+}
+
+// Função para limpar cache (você pode personalizar)
+function clearSiteCache() {
+    return new Promise((resolve, reject) => {
+        if (window.caches) {
+            caches.keys().then(cacheNames => {
+                cacheNames.forEach(cacheName => {
+                    caches.delete(cacheName);
+                });
+                resolve();
+            }).catch(reject);
+        } else {
+            resolve(); // Se não houver caches, resolvemos a promessa
+        }
+    });
+}
+
+// Função para lidar com o clique do botão de importação
+document.getElementById('importButton').addEventListener('click', () => {
+    const categorySelect = document.getElementById('categorySelect');
+    const selectedGistId = categorySelect.value; // Pega o ID do Gist selecionado
+
+    importDatabaseFromGist(selectedGistId); // Chama a função de importação com o Gist ID selecionado
+});
+// fim importar uma categoria do dropdown que está no gist
 
 // Função para tocar o som nos modais
 function alertaSucesso() {

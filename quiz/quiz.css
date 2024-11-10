@@ -876,3 +876,54 @@ body {
     margin-top: 10px;
 }
 
+/* Estilo básico para o container */
+.container {
+    display: flex;
+    justify-content: space-between; /* Espaça os itens para ficarem na mesma linha em telas maiores */
+    gap: 10px; /* Adiciona um pequeno espaço entre os elementos */
+    width: 100%;
+    padding: 10px; /* Padding para dar um pouco de margem */
+}
+
+/* Estilo do dropdown */
+#categorySelect {
+    padding: 10px 20px;
+    font-size: 16px;
+    flex-grow: 1; /* Faz o dropdown crescer e ocupar o espaço disponível */
+    min-width: 200px; /* Garante uma largura mínima */
+}
+
+/* Estilo do botão */
+#importButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    flex-grow: 1; /* Faz o botão crescer e ocupar o espaço disponível */
+    min-width: 150px; /* Garante uma largura mínima */
+    cursor: pointer; /* Torna o cursor um "pointer" quando passar em cima do botão */
+    background-color: #007BFF; /* Cor de fundo azul */
+    color: white; /* Cor do texto */
+    border: none; /* Remove borda */
+    border-radius: 5px; /* Borda arredondada */
+    transition: background-color 0.3s; /* Transição suave para mudança de cor */
+}
+
+#importButton:hover {
+    background-color: #0056b3; /* Cor ao passar o mouse */
+}
+
+/* Media query para telas menores (por exemplo, abaixo de 768px) */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Coloca o botão e o dropdown um em cima do outro */
+        align-items: stretch; /* Faz com que ambos os itens ocupem toda a largura do container */
+    }
+
+    #categorySelect, #importButton {
+        width: 100%; /* Faz com que o dropdown e o botão ocupem 100% da largura da tela */
+        margin-bottom: 10px; /* Adiciona um espaço entre o dropdown e o botão */
+    }
+
+    #importButton {
+        margin-bottom: 0; /* Remove o espaço extra abaixo do botão */
+    }
+}

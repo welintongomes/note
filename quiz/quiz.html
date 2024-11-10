@@ -145,11 +145,32 @@
             <!-- Botão para selecionar arquivo -->
             <button accesskey="a" title="ALT+A Importar Arquivo" id="uploadButton" class="btn btn-primary"
                 onclick="document.getElementById('fileInput').click();">Importar Localmente</button>
-            <button class="btn btn-secondary" onclick="importDatabaseFromGist()">Importar da Nuvem</button>
             <button accesskey="d" title="ALT+D Exportar Arquivo" class="btn btn-secondary"
                 onclick="exportDatabase()">Exportar Localmente</button>
             <button class="btn btn-danger" onclick="deleteAllQuestions()">Excluir Todas as Perguntas</button>
         </div>
+
+        <!-- funçao para selecionar a categoria que deseja baixar -->
+            <div>
+                <h1 style="text-align: center;">Importar uma Categoria</h1>
+                
+                <div class="container">
+                    <!-- Dropdown (select) para escolher a categoria -->
+                    <select id="categorySelect">
+                        <option value="">baixar categoria</option>
+                        <option value="91b30f2ab4db553ac595d17e69c8a095">HTML Básico</option>
+                        <option value="c2f9a6bb7efa62f99ca573068a94c968">CSS Básico</option>
+                        <option value="4de8efe49e6ee9e9e425c7e7f040d1ac">JS Básico</option>
+                        <!-- Adicione mais categorias conforme necessário -->
+                    </select>
+                
+                    <!-- Botão para importar os dados do Gist -->
+                    <button id="importButton">Importar</button>
+                </div>
+                
+
+                <div style="text-align: center;" id="statusMessage"></div> <!-- Mensagem de status -->
+            </div>
 
         <!-- Input de arquivo escondido -->
         <input type="file" id="fileInput" style="display: none;" onchange="importDatabase(event)" accept=".json">
