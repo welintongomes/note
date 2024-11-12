@@ -241,10 +241,6 @@ p {
 }
 
 
-
-
-
-
 /*estilizar texto dentro das perguntas na lista de pergunta*/
 span.question-text {
     font-size: larger;
@@ -259,6 +255,7 @@ span.details-text {
 select#categoria-quiz {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
+
 
 select#categoria-quiz.form-select:hover {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -593,7 +590,8 @@ senão padrão neutral será usado*/
     background-color: #e0e0e0; /* Efeito ao passar o mouse em notas não ativas */
 }
 .respons {
-    padding-left: 8px;
+    padding-right: 20px;
+    padding-left: 20px;
     width: 100%;
     display: flex;
     gap: 13px;
@@ -802,21 +800,6 @@ p#pergunta-quiz.mt-3.pergunta-text{
     overflow-wrap: break-word; /* Garante que palavras longas quebrem na linha */
 }
 
-/* @media (max-width: 767px) {
-    div.respons button {
-        width: 100%;
-        border-right: 8px;
-        font-size: 1rem;
-        line-height: 1.5;
-        margin-right: 6px;
-        padding: 13px 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: transform 0.6s ease, box-shadow 0.3s ease;
-        margin-bottom: 3px;
-        display: inline-block;
-    }
-} */
-
 /* div#opcoes{
     padding: 0px;
     margin: -25px;
@@ -913,6 +896,21 @@ body {
 
 /* Media query para telas menores (por exemplo, abaixo de 768px) */
 @media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Coloca o botão e o dropdown um em cima do outro */
+        align-items: stretch; /* Faz com que ambos os itens ocupem toda a largura do container */
+    }
+
+    #categorySelect, #importButton {
+        width: 100%; /* Faz com que o dropdown e o botão ocupem 100% da largura da tela */
+        margin-bottom: 10px; /* Adiciona um espaço entre o dropdown e o botão */
+    }
+
+    #importButton {
+        margin-bottom: 0; /* Remove o espaço extra abaixo do botão */
+    }
+}
+@media (min-width: 768px) {
     .container {
         flex-direction: column; /* Coloca o botão e o dropdown um em cima do outro */
         align-items: stretch; /* Faz com que ambos os itens ocupem toda a largura do container */
