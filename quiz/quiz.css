@@ -925,3 +925,6 @@ body {
         margin-bottom: 0; /* Remove o espaço extra abaixo do botão */
     }
 }
+.oculto {
+    display: none;
+}

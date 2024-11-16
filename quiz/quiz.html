@@ -51,7 +51,8 @@
         </div> -->
 
 
-        <button id="toggleButton" class="btn btn-primary w-100 w-lg-auto p-3 mt-0 mb-4 mx-auto d-block">Criar Novas Perguntas</button>
+        <button id="toggleButton" class="btn btn-primary w-100 w-lg-auto p-3 mt-0 mb-4 mx-auto d-block">Criar Novas
+            Perguntas</button>
 
         <div class="secPerguntas" id="secPerguntas" style="display: none;">
             <div class="col-12 d-flex justify-content-center align-items-center mb-3">
@@ -151,26 +152,40 @@
         </div>
 
         <!-- funçao para selecionar a categoria que deseja baixar -->
-            <div>
-                <h1 style="text-align: center;">Importar uma Categoria</h1>
-                
-                <div class="container">
-                    <!-- Dropdown (select) para escolher a categoria -->
-                    <select style="text-align: center;" id="categorySelect">
-                        <option value="">baixar categoria</option>
-                        <option value="91b30f2ab4db553ac595d17e69c8a095">HTML Básico</option>
-                        <option value="c2f9a6bb7efa62f99ca573068a94c968">CSS Básico</option>
-                        <option value="4de8efe49e6ee9e9e425c7e7f040d1ac">JS Básico</option>
-                        <!-- Adicione mais categorias conforme necessário -->
-                    </select>
-                
-                    <!-- Botão para importar os dados do Gist -->
-                    <button id="importButton">Importar</button>
-                </div>
-                
+        <div>
+            <h1 style="text-align: center;">Importar uma Categoria</h1>
 
-                <div style="text-align: center;" id="statusMessage"></div> <!-- Mensagem de status -->
+            <div class="container">
+                <!-- Dropdown (select) para escolher a categoria -->
+                
+                <select style="text-align: center;" id="categorySelect">
+                    <option value="">Baixar categoria</option>
+                    <!-- insira mais categorias abaixo para serem desbloqueadas conforma avança no jogo -->
+                    <option value="91b30f2ab4db553ac595d17e69c8a095">HTML Básico</option>
+                    <!-- quando jogar em qualquer categoria e chegar a 3 pontos de globalscore desbloqueará css básico -->
+                    <option value="316fbb4b286cfbc915ce184a52896eb8" class="oculto" data-unlock-global-score="3">
+                        CSS Básico
+                    </option>
+                    <option value="f1899aa11067bc19626e2d7fa6aa65fb" class="oculto" data-unlock-global-score="4">
+                        JS Básico
+                    </option>
+                    <!-- ao jogar html básico e chegar a 3 pontos de score desbloqueará html avançado -->
+                    <option value="f1899aa11067bc19626e2d7fa6aa65fa" class="oculto" data-unlock-category="HTML Básico"
+                        data-unlock-score="3">
+                        HTML Avançado
+                    </option>
+                    <option value="397a9f94cf92c5106553131571f70f04" class="oculto" data-unlock-category="CSS Básico"
+                        data-unlock-score="3">
+                        CSS Avançado
+                    </option>
+                    <!-- Adicione mais categorias conforme necessário -->
+                </select>
+
+                <!-- Botão para importar os dados do Gist -->
+                <button id="importButton">Importar</button>
             </div>
+            <div style="text-align: center;" id="statusMessage"></div> <!-- Mensagem de status -->
+        </div>
 
         <!-- Input de arquivo escondido -->
         <input type="file" id="fileInput" style="display: none;" onchange="importDatabase(event)" accept=".json">
@@ -189,7 +204,8 @@
             <label for="categoria-select" class="dropAddPerguntas">
                 <H4>Selecione uma categoria:</H4>
             </label>
-            <select style="text-align: center;" id="categoria-select" class="dropAddPerguntas" onchange="filterQuestionsByCategory()">
+            <select style="text-align: center;" id="categoria-select" class="dropAddPerguntas"
+                onchange="filterQuestionsByCategory()">
                 <option value="">Todas as Categorias</option>
                 <!-- As opções de categorias serão preenchidas dinamicamente -->
             </select>
@@ -211,13 +227,13 @@
                         <select style="text-align: center;" id="categoria-quiz" class="form-select w-100">
                             <option value="">Todas</option>
                             <!-- As opções de categorias serão preenchidas dinamicamente -->
-                        </select>
-                    </div>
+                        </select>     
+                    </div>                 
                 </div>
 
             </div>
         </div>
-        
+
         <div id="quiz" style="display: none;">
             <div id="timer" class="mt-1 col-12 d-flex flex-column flex-md-row align-items-center justify-content-center"
                 style="font-size: 18px; color: #ff0000fe;"></div>
@@ -280,9 +296,14 @@
                 <!-- Score Global -->
                 <div class="col-12 text-center mb-4">
                     <span>Score Global: </span><span id="global-score">0</span>
+                    
+                        <!-- aqui e mostrado o progresso do jogador e quantos pontos faltam para o proximo desbloqueio -->
+                        <p id="unlock-info"></p>
+                        <p id="proximo-desbloqueio"></p>
+                    
                 </div>
             </div>
-        
+
             <div class="row">
                 <!-- Idioma -->
                 <div class="col-12 col-md-6 mb-3">
@@ -295,7 +316,7 @@
                         </select>
                     </div>
                 </div>
-        
+
                 <!-- Voz -->
                 <div class="col-12 col-md-6 mb-3">
                     <div class="d-flex align-items-center">
@@ -304,7 +325,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <div class="row">
                 <!-- Checkboxes -->
                 <div class="col-12 d-flex justify-content-between">
@@ -323,7 +344,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
     </div>
     <!-- ------------------------------ começa aqui as inportações de audio para os alertas ------------------- -->

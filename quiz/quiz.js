@@ -157,6 +157,10 @@ function startQuiz() {
     document.getElementById("quiz").style.display = 'block';
     loadNextQuestion(questions.filter(q => q.categoria === currentCategory));
     loadGlobalScore(); // Carrega o score global antes de começar
+    // Atualiza o parágrafo sobre o próximo desbloqueio
+    atualizarProximoDesbloqueio();
+    // Atualiza paragrafo com informaçoes de desbloqueio com global score
+    updateUnlockInfo()
 }
 
 //fim funçao adicionar perguntas ao quiz
@@ -565,6 +569,9 @@ function updateGlobalScore() {
     globalScore = Object.values(scores).reduce((acc, score) => acc + score, 0);
     document.getElementById("global-score").textContent = globalScore; // Atualiza o score global na interface
     saveGlobalScore(); // Salva o score global atualizado
+
+    // Verifica desbloqueio de categorias com base no globalScore
+    unlockCategories();
 }
 function loadGlobalScore() {
     const transaction = db.transaction(["score"], "readonly");
@@ -592,6 +599,21 @@ function updateDatalist() {
         datalist.appendChild(option);
     });
 }
+
+
+function loadScore() {
+    const transaction = db.transaction(["score"], "readonly");
+    const store = transaction.objectStore("score");
+    const request = store.get(1);
+    
+    request.onsuccess = function (event) {
+        if (event.target.result) {
+            scores = event.target.result.scores || {}; // Carrega scores por categoria
+            const currentCategoryScore = scores[currentCategory] || 0; // Obtem o score da categoria atual
+            document.getElementById("score").textContent = currentCategoryScore;
+        }
+    };
+}
 // relacionado ao score 
 function loadScoreForCategory(categoria) {
     const transaction = db.transaction(["score"], "readonly");
@@ -601,30 +623,32 @@ function loadScoreForCategory(categoria) {
     request.onsuccess = function (event) {
         if (event.target.result) {
             scores = event.target.result.scores || {}; // Carrega todos os scores
-            // Inicializa o score da categoria, se ainda não existir
             if (scores[categoria] === undefined) {
-                scores[categoria] = 0; // Inicializa como 0
+                scores[categoria] = 0; // Inicializa como 0 se não existir
             }
-            const currentCategoryScore = scores[categoria]; // Obtem o score da categoria atual
-            document.getElementById("score").textContent = currentCategoryScore; // Atualiza o score na interface
-        }
-    };
-}
-
-
-function loadScore() {
-    const transaction = db.transaction(["score"], "readonly");
-    const store = transaction.objectStore("score");
-    const request = store.get(1);
-
-    request.onsuccess = function (event) {
-        if (event.target.result) {
-            scores = event.target.result.scores || {}; // Carrega scores por categoria
-            const currentCategoryScore = scores[currentCategory] || 0; // Obtem o score da categoria atual
+            const currentCategoryScore = scores[categoria]; // Obtém o score da categoria atual
             document.getElementById("score").textContent = currentCategoryScore;
         }
+        unlockCategories(); // Chama unlockCategories somente após os scores serem carregados
     };
 }
+
+function forceUnlockTestGlobal() {
+    globalScore = 5; // Simula um score global alto
+    updateGlobalScore();
+}
+
+// Teste temporário: desbloqueio forçado
+function forceUnlockTestHTML() {
+    scores["HTML Básico"] = 5; // Simula um score alto
+    unlockCategories(); // Chama a função manualmente para verificar o desbloqueio
+}
+function forceUnlockTestCSS() {
+    scores["CSS Básico"] = 5; // Simula um score alto
+    unlockCategories(); // Chama a função manualmente para verificar o desbloqueio
+}
+
+// Execute `forceUnlockTest()` no console do navegador para testar o desbloqueio manualmente.
 
 function saveScore() {
     const transaction = db.transaction(["score"], "readwrite");
@@ -659,7 +683,128 @@ function resetScore() {
         }
     );
 }
+//--------------
+//desbloquear categorias básicas baseado no scoreglobal
+function unlockCategories() {
+    const options = document.querySelectorAll('#categorySelect option.oculto');
 
+    options.forEach(option => {
+        const requiredCategory = option.getAttribute('data-unlock-category');
+        const requiredScoreAttr = option.getAttribute('data-unlock-score');
+        const requiredGlobalScoreAttr = option.getAttribute('data-unlock-global-score');
+        
+        // Se o desbloqueio depende de uma pontuação global específica
+        if (requiredGlobalScoreAttr && !isNaN(parseInt(requiredGlobalScoreAttr, 10))) {
+            const requiredGlobalScore = parseInt(requiredGlobalScoreAttr, 10);
+            
+            console.log(`Verificando desbloqueio global: Pontuação Global Requerida: ${requiredGlobalScore}`);
+            console.log(`Pontuação Global Atual: ${globalScore}`);
+            
+            if (globalScore >= requiredGlobalScore) {
+                option.classList.remove('oculto');
+                console.log(`Categoria desbloqueada: ${option.textContent.trim()} (Baseado no Global Score)`);
+            }
+        }
+        // Caso contrário, verifica o desbloqueio baseado em categoria específica
+        else if (requiredCategory && requiredScoreAttr && !isNaN(parseInt(requiredScoreAttr, 10))) {
+            const requiredScore = parseInt(requiredScoreAttr, 10);
+            const currentCategoryScore = scores[requiredCategory] || 0;
+
+            console.log(`Verificando desbloqueio: Categoria Requerida: ${requiredCategory}, Pontuação Requerida: ${requiredScore}`);
+            console.log(`Score atual em ${requiredCategory}: ${currentCategoryScore}`);
+
+            if (currentCategoryScore >= requiredScore) {
+                option.classList.remove('oculto');
+                console.log(`Categoria desbloqueada: ${option.textContent.trim()} (Baseado no Score da Categoria)`);
+            }
+        } else {
+            console.error(`Erro: Parâmetros de desbloqueio inválidos para ${option.textContent.trim()}`);
+        }
+    });
+}
+//mostrar paragrafo com informações sobre desbloqueio de proxima categoria scoreglobal 
+const unlockRequirements = [
+    { category: "CSS Básico", requiredScore: 3 },
+    { category: "JS Básico", requiredScore: 4 },
+    // Adicione mais requisitos conforme necessário
+];
+
+function checkNextUnlock() {
+    const sortedRequirements = unlockRequirements.sort((a, b) => a.requiredScore - b.requiredScore);
+
+    for (let i = 0; i < sortedRequirements.length; i++) {
+        if (globalScore < sortedRequirements[i].requiredScore) {
+            const pointsNeeded = sortedRequirements[i].requiredScore - globalScore;
+            return {
+                category: sortedRequirements[i].category,
+                pointsNeeded: pointsNeeded
+            };
+        }
+    }
+    return null;
+}
+
+function updateUnlockInfo() {
+    const unlockInfo = checkNextUnlock();
+    const paragraph = document.getElementById("unlock-info");
+
+    if (unlockInfo) {
+        paragraph.textContent = `Faltam ${unlockInfo.pointsNeeded} pontos para desbloquear a próxima categoria: ${unlockInfo.category}.`;
+    } else {
+        paragraph.textContent = "Parabéns! Todas as categorias estão desbloqueadas.";
+    }
+}
+
+function loadGlobalScore() {
+    const transaction = db.transaction(["score"], "readonly");
+    const store = transaction.objectStore("score");
+    const request = store.get(1);
+
+    request.onsuccess = function (event) {
+        if (event.target.result) {
+            globalScore = event.target.result.globalScore || 0;
+            document.getElementById("global-score").textContent = globalScore;
+            updateUnlockInfo();
+        }
+    };
+}
+
+function updateGlobalScore() {
+    globalScore = Object.values(scores).reduce((acc, score) => acc + score, 0);
+    document.getElementById("global-score").textContent = globalScore;
+    saveGlobalScore();
+    updateUnlockInfo();
+}
+
+//--------------
+//##########################
+function atualizarProximoDesbloqueio() {
+    const categoriaAtual = document.getElementById("categoria-quiz").value;
+    const desbloqueios = {
+        "HTML Básico": { proximo: "HTML Avançado", scoreNecessario: 3 },
+        "CSS Básico": { proximo: "CSS Avançado", scoreNecessario: 3 },
+        "JS Básico": { proximo: "JS Avançado", scoreNecessario: 3 }
+    };
+
+    const categoriaInfo = desbloqueios[categoriaAtual];
+
+    if (categoriaInfo) {
+        const { proximo, scoreNecessario } = categoriaInfo;
+        const scoreAtual = scores[categoriaAtual] || 0;
+
+        // Atualiza o texto do parágrafo
+        const texto = scoreAtual >= scoreNecessario
+            ? `Parabéns! Você já desbloqueou a próxima categoria: ${proximo}.`
+            : `Faltam ${scoreNecessario - scoreAtual} pontos para desbloquear ${proximo}.`;
+
+        document.getElementById("proximo-desbloqueio").textContent = texto;
+    } else {
+        // Caso não tenha próximo desbloqueio
+        document.getElementById("proximo-desbloqueio").textContent = "Nenhum desbloqueio disponível para esta categoria.";
+    }
+}
+
+//##########################
 // Função para embaralhar os botões (array com as perguntas)
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -819,6 +964,10 @@ async function loadNextQuestion(perguntasFiltradas) {
     });
     // Chame as funções para exibir a pergunta e iniciar a leitura
     readQuestionAndAnswers();
+    // Atualiza o parágrafo sobre o próximo desbloqueio
+    atualizarProximoDesbloqueio();
+    // Atualiza paragrafo com informaçoes de desbloqueio com global score
+    updateUnlockInfo()
     if (tempo) {
         startTimer(tempo);
     } else {
@@ -996,29 +1145,6 @@ function readAnswersInIframeOrder() {
 
     lerRespostaSequencialmente(0); // Inicia a leitura pela primeira resposta
 }
-
-// // Função para ler apenas a pergunta
-// function readQuestion() {
-//     // Interrompe qualquer leitura em andamento
-//     speechSynthesis.cancel();
-//     const textoLimpo = cleanText(currentQuestion.pergunta);
-//     speakText(textoLimpo);
-
-//     // Inicia a leitura das respostas após um pequeno atraso
-//     setTimeout(readAnswers, 1000); // 1 segundo de atraso entre a leitura da pergunta e das respostas
-// }//fim Função para ler apenas a pergunta
-
-// // Função para ler todas as respostas em sequência
-// function readAnswers() {
-//     const respostas = currentQuestion.respostas.map(cleanText); // Limpa o texto de cada resposta
-
-//     respostas.forEach((resposta, index) => {
-//         setTimeout(() => {
-//             speakText(resposta);
-//         }, index * 2000); // Atraso de 2 segundos entre cada resposta para evitar sobreposição
-//     });
-// }
-
 //fim Função para sintetizar
 
 //funçao de timer de tempo --------------------------------------------------------------------------------
@@ -1100,6 +1226,10 @@ async function checkAnswer(selectedIndex) {
     document.getElementById("score").textContent = scores[currentCategory];
     saveScore(); // Salva o score da categoria
     updateGlobalScore(); // Atualiza o score global na interface e no armazenamento
+
+    // Chama a função de desbloqueio após atualizar e salvar o score
+    unlockCategories();
+
     loadNextQuestion(questions.filter(q => q.categoria === currentCategory));
 }
 

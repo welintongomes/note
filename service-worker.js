@@ -1,5 +1,5 @@
 // Versão do cache e nome dinâmico
-const CACHE_VERSION = 'v1.0.2'; 
+const CACHE_VERSION = 'v1.0.3'; 
 const CACHE_NAME = `meu-site-cache-${CACHE_VERSION}`;
 const urlsToCache = [
     '/nota/', // Página inicial
