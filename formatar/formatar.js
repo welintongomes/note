@@ -34,6 +34,7 @@ const original = document.getElementById("charOriginal").value;
 const novo = document.getElementById("charNovo").value;
 const presetInicio = document.getElementById("presetInicio").value;
 const presetFinal = document.getElementById("presetFinal").value;
+const texto = document.getElementById("texto").value; // Captura o texto do textarea
 
 const chave = prompt(
     "Digite uma chave secreta para criptografar o preset e os caracteres:"
@@ -45,6 +46,7 @@ const dados = JSON.stringify({
     novo: novo,
     presetInicio: presetInicio,
     presetFinal: presetFinal,
+    texto: texto, // Inclui o texto no objeto
 });
 
 const dadosCriptografados = criptografarDados(dados, chave);
@@ -81,6 +83,7 @@ leitor.onload = function (e) {
         document.getElementById("charNovo").value = dados.novo;
         document.getElementById("presetInicio").value = dados.presetInicio;
         document.getElementById("presetFinal").value = dados.presetFinal;
+        document.getElementById("texto").value = dados.texto || ""; // Preenche o texto no textarea
         alert("Dados carregados com sucesso!");
     } else {
         alert("Chave incorreta ou dados inválidos.");
@@ -379,3 +382,24 @@ function limparSessionStorage() {
     // Reseta os campos manualmente
     document.getElementById('texto').value = '';
 }
+// Função para inverter os textos entre charOriginal e charNovo
+function inverterTextos() {
+    // Obter os elementos charOriginal e charNovo
+    const charOriginal = document.getElementById("charOriginal");
+    const charNovo = document.getElementById("charNovo");
+
+    // Trocar os valores entre os campos
+    const temp = charOriginal.value;
+    charOriginal.value = charNovo.value;
+    charNovo.value = temp;
+
+    // Atualizar o localStorage para manter a inversão
+    localStorage.setItem("charOriginal", charOriginal.value);
+    localStorage.setItem("charNovo", charNovo.value);
+
+    // Recalcular o texto modificado (se necessário)
+    substituirTexto();
+}
+
+// Adicionar o evento de clique ao ícone ➡️
+document.getElementById("invertTexts").addEventListener("click", inverterTextos);

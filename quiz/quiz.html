@@ -163,19 +163,19 @@
                     <!-- insira mais categorias abaixo para serem desbloqueadas conforma avança no jogo -->
                     <option value="91b30f2ab4db553ac595d17e69c8a095">HTML Básico</option>
                     <!-- quando jogar em qualquer categoria e chegar a 3 pontos de globalscore desbloqueará css básico -->
-                    <option value="316fbb4b286cfbc915ce184a52896eb8" class="oculto" data-unlock-global-score="3">
+                    <option value="316fbb4b286cfbc915ce184a52896eb8" class="oculto" data-unlock-global-score="20">
                         CSS Básico
                     </option>
-                    <option value="f1899aa11067bc19626e2d7fa6aa65fb" class="oculto" data-unlock-global-score="4">
+                    <option value="f1899aa11067bc19626e2d7fa6aa65fb" class="oculto" data-unlock-global-score="30">
                         JS Básico
                     </option>
                     <!-- ao jogar html básico e chegar a 3 pontos de score desbloqueará html avançado -->
                     <option value="f1899aa11067bc19626e2d7fa6aa65fa" class="oculto" data-unlock-category="HTML Básico"
-                        data-unlock-score="3">
+                        data-unlock-score="100">
                         HTML Avançado
                     </option>
                     <option value="397a9f94cf92c5106553131571f70f04" class="oculto" data-unlock-category="CSS Básico"
-                        data-unlock-score="3">
+                        data-unlock-score="100">
                         CSS Avançado
                     </option>
                     <!-- Adicione mais categorias conforme necessário -->
@@ -262,40 +262,17 @@
         </div>
 
         <!-- <div> -->
-        <div class="col-12 d-flex flex-column flex-md-row align-items-center justify-content-center">
-            <h2 class="mb-3 mb-md-0 me-md-3 mt-4">Score: <span id="score">0</span></h2>
+        <div class="col-12 d-flex  flex-md-row align-items-center justify-content-center">
+            <h2 class="mb-3 mb-md-0 me-md-3 mt-4">Score: <span style="color: green; font-weight: bolder;" id="score">0</span></h2>
             <button class="btn btn-success w-100 " onclick="startQuiz()">Iniciar Quiz</button>
             <h2 class="textoCenter"></h2>
         </div>
 
-
-        <div class="row">
-            <div class="col-12 d-flex flex-column flex-md-row align-items-center justify-content-center">
-
-                <div class="row mx-auto col-12 m-2">
-                    <div class="col-4">
-                        <button class="btn btn-danger w-100" onclick="resetScore()">Resetar Score</button>
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-primary w-100" id="exportarScore">Exportar Score</button>
-                    </div>
-                    <div class="col-4">
-                        <button class="btn btn-secondary w-100" id="importarScore">Importar Score</button>
-                    </div>
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
-        <div class="container mt-5">
+        <div class="container mt-2">
             <div class="row">
                 <!-- Score Global -->
                 <div class="col-12 text-center mb-4">
-                    <span>Score Global: </span><span id="global-score">0</span>
+                    <span style="font-weight: bold;">Score Global: </span><span style="color: lightseagreen; font-weight: bolder;" id="global-score">0</span>
                     
                         <!-- aqui e mostrado o progresso do jogador e quantos pontos faltam para o proximo desbloqueio -->
                         <p id="unlock-info"></p>
@@ -344,6 +321,30 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-12 d-flex flex-column flex-md-row align-items-center justify-content-center">
+
+                <div class="row mx-auto col-12 m-2">
+                    <div class="col-4">
+                        <button class="btn btn-danger w-100" onclick="resetScore()">Resetar Score</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary w-100" id="exportarScore">Exportar Score</button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-secondary w-100" id="importarScore">Importar Score</button>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        
 
     </div>
     </div>

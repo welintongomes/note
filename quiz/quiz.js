@@ -315,9 +315,7 @@ function deleteQuestion(id) {
             store.delete(id);
             loadQuestions(); // Recarrega as perguntas
         },
-        function () {
-            console.log("Exclusão de pergunta cancelada pelo usuário."); // Ação de cancelamento
-        }
+        
     );
 }
 //fim deletar perguntas
@@ -338,9 +336,7 @@ function deleteAllQuestions() {
                 showModalMessage("Todas as perguntas foram excluídas.", 'alert');
             };
         },
-        function () { // Callback de cancelamento (opcional)
-            console.log("Ação de exclusão de todas as perguntas foi cancelada.");
-        }
+        
     );
 }
 //fim deletar todas as perguntas com confirmação
@@ -535,10 +531,7 @@ function loadFilteredQuestions(filteredQuestions) {//===========================
                         detailsContainer.style.display = "block";
                         toggleDetailsButton.textContent = "Ocultar Detalhes"; // Muda o texto do botão
                     },
-                    function () {
-                        // Ação ao cancelar
-                        console.log("Usuário cancelou a penalização.");
-                    }
+                    
                 );
             } else {
                 // Oculta os detalhes sem pedir confirmação
@@ -675,12 +668,8 @@ function resetScore() {
             // Salva o score resetado em IndexedDB
             saveScore();
             saveGlobalScore(); // Função para salvar o globalScore se necessário
-
-            console.log("Score e globalScore foram resetados.");
         },
-        function () { // Callback de cancelamento (opcional)
-            console.log("Ação de reset de score foi cancelada.");
-        }
+        
     );
 }
 //--------------
@@ -697,25 +686,17 @@ function unlockCategories() {
         if (requiredGlobalScoreAttr && !isNaN(parseInt(requiredGlobalScoreAttr, 10))) {
             const requiredGlobalScore = parseInt(requiredGlobalScoreAttr, 10);
             
-            console.log(`Verificando desbloqueio global: Pontuação Global Requerida: ${requiredGlobalScore}`);
-            console.log(`Pontuação Global Atual: ${globalScore}`);
-            
+           
             if (globalScore >= requiredGlobalScore) {
                 option.classList.remove('oculto');
-                console.log(`Categoria desbloqueada: ${option.textContent.trim()} (Baseado no Global Score)`);
             }
         }
         // Caso contrário, verifica o desbloqueio baseado em categoria específica
         else if (requiredCategory && requiredScoreAttr && !isNaN(parseInt(requiredScoreAttr, 10))) {
             const requiredScore = parseInt(requiredScoreAttr, 10);
             const currentCategoryScore = scores[requiredCategory] || 0;
-
-            console.log(`Verificando desbloqueio: Categoria Requerida: ${requiredCategory}, Pontuação Requerida: ${requiredScore}`);
-            console.log(`Score atual em ${requiredCategory}: ${currentCategoryScore}`);
-
             if (currentCategoryScore >= requiredScore) {
                 option.classList.remove('oculto');
-                console.log(`Categoria desbloqueada: ${option.textContent.trim()} (Baseado no Score da Categoria)`);
             }
         } else {
             console.error(`Erro: Parâmetros de desbloqueio inválidos para ${option.textContent.trim()}`);
@@ -724,8 +705,8 @@ function unlockCategories() {
 }
 //mostrar paragrafo com informações sobre desbloqueio de proxima categoria scoreglobal 
 const unlockRequirements = [
-    { category: "CSS Básico", requiredScore: 3 },
-    { category: "JS Básico", requiredScore: 4 },
+    { category: "CSS Básico", requiredScore: 20 },
+    { category: "JS Básico", requiredScore: 30 },
     // Adicione mais requisitos conforme necessário
 ];
 
@@ -751,7 +732,7 @@ function updateUnlockInfo() {
     if (unlockInfo) {
         paragraph.textContent = `Faltam ${unlockInfo.pointsNeeded} pontos para desbloquear a próxima categoria: ${unlockInfo.category}.`;
     } else {
-        paragraph.textContent = "Parabéns! Todas as categorias estão desbloqueadas.";
+        paragraph.textContent = "";
     }
 }
 
@@ -781,9 +762,9 @@ function updateGlobalScore() {
 function atualizarProximoDesbloqueio() {
     const categoriaAtual = document.getElementById("categoria-quiz").value;
     const desbloqueios = {
-        "HTML Básico": { proximo: "HTML Avançado", scoreNecessario: 3 },
-        "CSS Básico": { proximo: "CSS Avançado", scoreNecessario: 3 },
-        "JS Básico": { proximo: "JS Avançado", scoreNecessario: 3 }
+        "HTML Básico": { proximo: "HTML Avançado", scoreNecessario: 100 },
+        "CSS Básico": { proximo: "CSS Avançado", scoreNecessario: 100 },
+        "JS Básico": { proximo: "JS Avançado", scoreNecessario: 100 }
     };
 
     const categoriaInfo = desbloqueios[categoriaAtual];
@@ -794,7 +775,7 @@ function atualizarProximoDesbloqueio() {
 
         // Atualiza o texto do parágrafo
         const texto = scoreAtual >= scoreNecessario
-            ? `Parabéns! Você já desbloqueou a próxima categoria: ${proximo}.`
+            ? ``
             : `Faltam ${scoreNecessario - scoreAtual} pontos para desbloquear ${proximo}.`;
 
         document.getElementById("proximo-desbloqueio").textContent = texto;
@@ -1098,7 +1079,7 @@ function speakText(text, callback) {
         utterance.onend = callback; // Chama a função de callback quando a fala termina
         speechSynthesis.speak(utterance);
     } else {
-        console.log("API de síntese de voz não é suportada neste navegador.");
+        
     }
 }
 
@@ -1161,7 +1142,6 @@ function startTimer(tempoLimite) {
             document.getElementById("timer").textContent = "Tempo esgotado!";
             alertaTempo();
             await showModalMessage("Tempo esgotado!", 'error', 'error'); // Aguarda o fechamento do modal
-            console.log("Tempo esgotado! Chamada para handleTimeOut...");
             handleTimeOut(); // Certifique-se de que esta função é chamada após o modal ser fechado
         }
     }, 1000);
@@ -1169,23 +1149,17 @@ function startTimer(tempoLimite) {
 
 function handleTimeOut() {
     const modoJogo = document.getElementById("modo-jogo").value;
-    console.log(`Modo de jogo: ${modoJogo}`);
-    console.log(`Score antes da penalidade: ${scores[currentCategory]}`);
 
     // Aplica penalidade de acordo com o modo de jogo numérico
     if (modoJogo === "2") { // Difícil
         scores[currentCategory] -= 1;
-        console.log("Penalidade aplicada: -1 ponto (Difícil)");
     } else if (modoJogo === "3") { // Impossível
         scores[currentCategory] -= 2;
-        console.log("Penalidade aplicada: -2 pontos (Impossível)");
     } else {
-        console.warn(`Modo de jogo não aplica penalidade: ${modoJogo}`);
     }
     // Atualiza o score global e exibe o valor atualizado na interface
     updateGlobalScore(); // Atualiza o score global após penalidade por tempo
     document.getElementById("score").textContent = scores[currentCategory];
-    console.log(`Score atualizado após penalidade: ${scores[currentCategory]}`);
     // Salva o score e carrega a próxima pergunta
     saveScore(); // Salva o score
     loadNextQuestion(questions.filter(q => q.categoria === currentCategory)); // Carrega a próxima pergunta
@@ -1254,9 +1228,7 @@ function nextQuestion() {
             // Carrega a próxima pergunta
             loadNextQuestion(questions.filter(q => q.categoria === currentCategory));
         },
-        function () {
-            console.log("Usuário cancelou a penalização."); // Ação de cancelamento
-        }
+        
     );
 }
 
@@ -1416,32 +1388,8 @@ function importDatabase(event) {//importal local
     };
 
     reader.readAsText(file);
-}//fim importar local
+}
 
-//importar uma categoria do dropdown que está no gist
-// Função para limpar dados do site e retornar uma Promise
-// function clearSiteCache() {
-//     return new Promise((resolve, reject) => {
-//         if ('caches' in window) {
-//             caches.keys().then((cacheNames) => {
-//                 return Promise.all(
-//                     cacheNames.map((cacheName) => {
-//                         return caches.delete(cacheName);
-//                     })
-//                 );
-//             }).then(() => {
-//                 console.log("Cache do site limpo com sucesso!");
-//                 resolve(); // Resolve a Promise
-//             }).catch((error) => {
-//                 console.error("Erro ao limpar o cache do site:", error);
-//                 reject(error); // Reject a Promise em caso de erro
-//             });
-//         } else {
-//             resolve(); // Resolve caso caches não esteja disponível
-//         }
-//     });
-// }
-//fim funçao para limpar dados do site
 // importar uma categoria do dropdown que está no gist
 // Função para mostrar mensagens no status
 function showStatusMessage(message, type) {
