@@ -34,8 +34,9 @@ const original = document.getElementById("charOriginal").value;
 const novo = document.getElementById("charNovo").value;
 const presetInicio = document.getElementById("presetInicio").value;
 const presetFinal = document.getElementById("presetFinal").value;
-const texto = document.getElementById("texto").value; // Captura o texto do textarea
-
+//const texto = document.getElementById("texto").value; // Captura o texto do textarea
+const resultado = document.getElementById("resultado").value; // Captura o texto do textarea
+    
 const chave = prompt(
     "Digite uma chave secreta para criptografar o preset e os caracteres:"
 );
@@ -46,7 +47,8 @@ const dados = JSON.stringify({
     novo: novo,
     presetInicio: presetInicio,
     presetFinal: presetFinal,
-    texto: texto, // Inclui o texto no objeto
+    //texto: texto, // Inclui o texto no objeto
+    resultado: resultado, // Inclui o texto no objeto
 });
 
 const dadosCriptografados = criptografarDados(dados, chave);
@@ -83,7 +85,8 @@ leitor.onload = function (e) {
         document.getElementById("charNovo").value = dados.novo;
         document.getElementById("presetInicio").value = dados.presetInicio;
         document.getElementById("presetFinal").value = dados.presetFinal;
-        document.getElementById("texto").value = dados.texto || ""; // Preenche o texto no textarea
+        //document.getElementById("texto").value = dados.texto || ""; // Preenche o texto no textarea texto
+        document.getElementById("resultado").value = dados.resultado || ""; // Preenche o texto no textarea resultado
         alert("Dados carregados com sucesso!");
     } else {
         alert("Chave incorreta ou dados inválidos.");
