@@ -152,12 +152,15 @@ if (charsOriginais.length !== charsNovos.length) {
 }
 
 let textoModificado = texto;
-
-for (let i = 0; i < charsOriginais.length; i++) {
-    const regex = new RegExp(charsOriginais[i], "g");
-    textoModificado = textoModificado.replace(regex, charsNovos[i]);
+// Função para escapar caracteres especiais em uma string
+function escaparRegex(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
 }
 
+for (let i = 0; i < charsOriginais.length; i++) {
+    const regex = new RegExp(escaparRegex(charsOriginais[i]), "g");
+    textoModificado = textoModificado.replace(regex, charsNovos[i]);
+}
 let presetInicio = document.getElementById("presetInicio").value;
 if (document.getElementById("converterInicio").checked) {
     for (let i = 0; i < charsOriginais.length; i++) {
