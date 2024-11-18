@@ -115,30 +115,8 @@ if (localStorage.getItem("presetFinal")) {
     document.getElementById("presetFinal").value =
         localStorage.getItem("presetFinal");
 }
-
-// Verificar e aplicar o tema armazenado no localStorage
-const themeSwitch = document.getElementById("themeSwitch");
-if (localStorage.getItem("dark-mode") === "enabled") {
-    document.body.classList.add("dark-mode");
-    themeSwitch.checked = true;
-} else {
-    document.body.classList.add("light-mode");
-}
 };
 
-// Função para alternar o tema e salvar a escolha no localStorage
-const themeSwitch = document.getElementById("themeSwitch");
-themeSwitch.addEventListener("change", function () {
-if (this.checked) {
-    document.body.classList.remove("light-mode");
-    document.body.classList.add("dark-mode");
-    localStorage.setItem("dark-mode", "enabled");
-} else {
-    document.body.classList.remove("dark-mode");
-    document.body.classList.add("light-mode");
-    localStorage.setItem("dark-mode", "disabled");
-}
-});
 
 // Função para substituir o texto e salvar os presets no localStorage
 function substituirTexto() {
@@ -409,3 +387,29 @@ function inverterTextos() {
 
 // Adicionar o evento de clique ao ícone ➡️
 document.getElementById("invertTexts").addEventListener("click", inverterTextos);
+
+// Função para embaralhar os caracteres em um campo de texto
+function embaralharTexto(texto) {
+    const caracteres = texto.split(","); // Divide os caracteres por vírgula
+    for (let i = caracteres.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // Posição aleatória
+        [caracteres[i], caracteres[j]] = [caracteres[j], caracteres[i]]; // Troca
+    }
+    return caracteres.join(","); // Reúne os caracteres em formato original
+}
+
+// Função para embaralhar os valores de charOriginal e charNovo
+function embaralharCampos() {
+    const charOriginal = document.getElementById("charOriginal");
+    const charNovo = document.getElementById("charNovo");
+
+    charOriginal.value = embaralharTexto(charOriginal.value);
+    charNovo.value = embaralharTexto(charNovo.value);
+
+    localStorage.setItem("charOriginal", charOriginal.value);
+    localStorage.setItem("charNovo", charNovo.value);
+}
+
+// Adicionar eventos de clique aos botões
+document.getElementById("invertTexts").addEventListener("click", inverterTextos);
+document.getElementById("shuffleTexts").addEventListener("click", embaralharCampos);
