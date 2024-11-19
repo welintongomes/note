@@ -385,7 +385,7 @@ function inverterTextos() {
     substituirTexto();
 }
 
-// Adicionar o evento de clique ao ícone ➡️
+// Adicionar o evento de clique ao ícone 🔄
 document.getElementById("invertTexts").addEventListener("click", inverterTextos);
 
 // Função para embaralhar os caracteres em um campo de texto
@@ -409,7 +409,25 @@ function embaralharCampos() {
     localStorage.setItem("charOriginal", charOriginal.value);
     localStorage.setItem("charNovo", charNovo.value);
 }
+function embaralharCharOriginal() {
+    const charOriginal = document.getElementById("charOriginal");
+    const charNovo = document.getElementById("charNovo");
+
+    charOriginal.value = embaralharTexto(charOriginal.value);
+
+    localStorage.setItem("charOriginal", charOriginal.value);
+}
+
+function embaralharCharNovo() {
+    const charOriginal = document.getElementById("charOriginal");
+    const charNovo = document.getElementById("charNovo");
+
+    charNovo.value = embaralharTexto(charNovo.value);
+
+    localStorage.setItem("charNovo", charNovo.value);
+}
 
 // Adicionar eventos de clique aos botões
-document.getElementById("invertTexts").addEventListener("click", inverterTextos);
 document.getElementById("shuffleTexts").addEventListener("click", embaralharCampos);
+document.getElementById("shuffleCharNovo").addEventListener("click", embaralharCharNovo);
+document.getElementById("shuffleCharOriginal").addEventListener("click", embaralharCharOriginal);

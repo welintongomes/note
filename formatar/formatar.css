@@ -271,3 +271,16 @@
   textarea#presetInicio.form-control{
     height: 38px;
   }
+
+  .icone-text .d-flex {
+    display: flex;
+    align-items: center; /* Alinha o conteúdo verticalmente */
+}
+
+.icone-text span {
+    margin-right: 8px; /* Dá um pequeno espaço entre o ícone e o campo de entrada */
+}
+
+.form-control {
+    flex-grow: 1; /* Faz o input ocupar o restante do espaço disponível */
+}
