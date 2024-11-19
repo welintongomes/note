@@ -37,14 +37,18 @@
         </div>
 
         <div class="form-section custom-replace-section">
-            <p style="text-align: center;">Quais caracteres quer substituir?<button class="btn btn-secondary" id="shuffleTexts">Embaralhar os Textos </button></span></p>
+            <p style="text-align: center;" class="text-container">
+                <span>Quais caracteres quer substituir?</span>
+                <button class="btn btn-secondary" id="shuffleTexts">Embaralhar os Textos</button>
+              </p>
+              
             <div class="row icone-text">
                 <div class="col-md-5">
                     <input type="text" id="charOriginal" class="form-control " placeholder="Substituir: Ia,olá,9" />
                 </div>
-                <div class="col-md-1 text-center">
+                <div class="col-md-1 col-lg-1 text-center">
                     <!-- Ícone de substituição -->
-                    <span id="invertTexts" class="replace-icon">➡️</span>
+                    <span id="invertTexts" class="replace-icon">🔄</span>
                 </div>
                 <div class="col-md-5">
                     <input type="text" id="charNovo" class="form-control " placeholder="Por: a,b,c" />
@@ -65,21 +69,21 @@
 
         <div class="form-section custom-form-section">
             <div class="form-group">
-                <label class="form-check-label" for="presetInicio">Preset topo:
+                <label class="form-check-label" for="presetInicio">
                     <input type="checkbox" id="converterInicio" class="form-check-input" />
                     Converter?
                 </label>
                 <textarea id="presetInicio" class="form-control " rows="2"
-                    placeholder="Insira o valor fixo para o início"></textarea>
+                    placeholder="valor no topo"></textarea>
             </div>
 
             <div class="form-group">
-                <label class="form-check-label" for="presetFinal">Preset fim:
+                <label class="form-check-label" for="presetFinal">
                     <input type="checkbox" id="converterFinal" class="form-check-input" />
                     Converter?
                 </label>
                 <textarea id="presetFinal" class="form-control " rows="2"
-                    placeholder="Insira o valor fixo para o final"></textarea>
+                    placeholder="valor no final"></textarea>
             </div>
         </div>
 
@@ -102,12 +106,12 @@
         <div class="row mx-auto col-12 col-lg-12 mb-2 g-2">
             <div class="col">
                 <button id="btnSalvarArquivo" class="btn w-100 btn-primary">
-                    Salvar Preset e Substituições em Arquivo
+                    Salvar Resultado e Substituições
                 </button>
             </div>
             <div class="col">
                 <button id="btnCarregarArquivo" class="btn w-100 btn-secondary">
-                    Carregar Preset e Substituições de Arquivo
+                    Carregar Resultados e Substituições
                 </button>
             </div>
         </div>
