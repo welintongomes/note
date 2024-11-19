@@ -283,3 +283,11 @@
 .form-control {
     flex-grow: 1; /* Faz o input ocupar o restante do espaço disponível */
 }
+#shuffleCharOriginal {
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    color: blue;
+  }
+#shuffleCharNovo {
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    color: blue;
+  }
