@@ -626,20 +626,20 @@ function loadScoreForCategory(categoria) {
     };
 }
 
-function forceUnlockTestGlobal() {
-    globalScore = 5; // Simula um score global alto
-    updateGlobalScore();
-}
+// function forceUnlockTestGlobal() {
+//     globalScore = 5; // Simula um score global alto
+//     updateGlobalScore();
+// }
 
-// Teste temporário: desbloqueio forçado
-function forceUnlockTestHTML() {
-    scores["HTML Básico"] = 5; // Simula um score alto
-    unlockCategories(); // Chama a função manualmente para verificar o desbloqueio
-}
-function forceUnlockTestCSS() {
-    scores["CSS Básico"] = 5; // Simula um score alto
-    unlockCategories(); // Chama a função manualmente para verificar o desbloqueio
-}
+// // Teste temporário: desbloqueio forçado
+// function forceUnlockTestHTML() {
+//     scores["HTML Básico"] = 5; // Simula um score alto
+//     unlockCategories(); // Chama a função manualmente para verificar o desbloqueio
+// }
+// function forceUnlockTestCSS() {
+//     scores["CSS Básico"] = 5; // Simula um score alto
+//     unlockCategories(); // Chama a função manualmente para verificar o desbloqueio
+// }
 
 // Execute `forceUnlockTest()` no console do navegador para testar o desbloqueio manualmente.
 
@@ -1175,13 +1175,39 @@ async function checkAnswer(selectedIndex) {
     clearInterval(timer);
     document.getElementById("timer").textContent = "";
 
+    // Detecta o idioma da categoria atual
+    const idioma = detectarIdiomaCategoria(currentCategory);
+
+    // Mensagens personalizadas
+    const mensagens = {
+        en: {
+            correto: "Correct! The answer is:",
+            errado: "Wrong! The correct answer is:",
+            descricao: "Description:"
+        },
+        es: {
+            correto: "¡Correcto! La respuesta es:",
+            errado: "¡Incorrecto! La respuesta correcta es:",
+            descricao: "Descripción:"
+        },
+        pt: {
+            correto: "Correto! A resposta é:",
+            errado: "Errado! A resposta correta é:",
+            descricao: "Descrição:"
+        }
+    };
+
+    const mensagem = mensagens[idioma];
+
     if (selectedAnswer === respostaCorreta) {
         scores[currentCategory] = (scores[currentCategory] || 0) + 1; // Incrementa o score da categoria
         alertaSucesso();
-        await showModalMessage(`Correto! A resposta é: ${currentQuestion.respostas[selectedIndex]}\nDescrição: ${descricao}`, 'success');
+        await showModalMessage(`${mensagem.correto} ${currentQuestion.respostas[selectedIndex]}\n${mensagem.descricao} ${descricao}`,
+            'success');
     } else {
         alertaErro();
-        await showModalMessage(`Errado! A resposta correta é: ${currentQuestion.respostas[["A", "B", "C", "D"].indexOf(respostaCorreta)]}\nDescrição: ${currentQuestion.descricaoRespostas[["A", "B", "C", "D"].indexOf(respostaCorreta)]}`, 'error');
+        await showModalMessage(`${mensagem.errado} ${currentQuestion.respostas[options.indexOf(respostaCorreta)]}\n${mensagem.descricao} ${currentQuestion.descricaoRespostas[options.indexOf(respostaCorreta)]}`,
+            'error');
 
         const modoJogo = document.getElementById("modo-jogo").value;
         switch (modoJogo) {
@@ -1792,3 +1818,56 @@ document.getElementById("toggleButton").addEventListener("click", function () {
         secPerguntas.style.display = "none"; // Esconde a div
     }
 });
+
+// Função para definir o idioma e voz com base na categoria atual
+function definirIdiomaPorCategoria() {
+    // Obter a categoria atual
+    const categoriaAtual = document.getElementById("categoria-quiz").value.toLowerCase();
+
+    // Mapeamento de idiomas por palavras-chave na categoria
+    const idiomas = {
+        "inglês": "en",  // Código para inglês
+        "espanhol": "es", // Código para espanhol
+        "português": "pt" // Código para português
+    };
+
+    // Iterar pelas palavras-chave para determinar o idioma
+    let idiomaSelecionado = idiomaPadrao; // Padrão: 'pt'
+    for (const [palavraChave, codigoIdioma] of Object.entries(idiomas)) {
+        if (categoriaAtual.includes(palavraChave)) {
+            idiomaSelecionado = codigoIdioma;
+            break;
+        }
+    }
+
+    // Atualizar o idioma no dropdown de idiomas
+    idiomaSelect.value = idiomaSelecionado;
+    atualizarVozes(); // Atualiza as vozes com base no idioma selecionado
+
+    // Selecionar uma voz padrão para o idioma, se disponível
+    const vozPadrãoIdioma = vozesDisponiveis.find(voz => voz.lang.startsWith(idiomaSelecionado));
+    if (vozPadrãoIdioma) {
+        vozSelect.value = vozPadrãoIdioma.name;
+    }
+
+    console.log(`Idioma definido como "${idiomaSelecionado}" e voz como "${vozSelect.value}".`);
+}
+
+// Exemplo de chamada da função quando a categoria muda
+document.getElementById("categoria-quiz").addEventListener("change", definirIdiomaPorCategoria);
+
+// Chamar a função ao iniciar a página para ajustar o idioma e voz com base na categoria carregada
+// window.onload = function () {
+    
+// };
+//funçao para descobrir o idioma que deve ser mostrado no modal
+function detectarIdiomaCategoria(categoria) {
+    if (categoria.toLowerCase().includes("inglês") || categoria.toLowerCase().includes("english")) {
+        return 'en';
+    } else if (categoria.toLowerCase().includes("espanhol") || categoria.toLowerCase().includes("spanish")) {
+        return 'es';
+    } else {
+        return 'pt'; // Padrão: Português
+    }
+}
+//fim funçao para descobrir o idioma que deve ser mostrado no modal
