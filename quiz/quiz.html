@@ -312,7 +312,7 @@
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="lerRespostasCheckbox" checked>
-                        <label class="form-check-label" for="lerRespostasCheckbox">🔊 Resposta</label>
+                        <label class="form-check-label" for="lerRespostasCheckbox">🔊 Respostas</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="lerModalCheckbox" checked>
@@ -378,6 +378,7 @@
         // Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
         window.onload = function () {
             showTab('respostas');
+            definirIdiomaPorCategoria();
         };
     </script>
     <script src="quiz.js"></script>
