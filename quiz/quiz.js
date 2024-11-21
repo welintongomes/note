@@ -966,7 +966,7 @@ const vozSelect = document.getElementById("voz");
 let vozesDisponiveis = [];
 
 // Definindo o idioma e a voz padrão para o Português do Brasil (pt-BR)
-const idiomaPadrao = 'pt';  // 'pt' para o idioma Português (Brasil)
+const idiomaPadrao = 'Google português do Brasil';  // 'pt' para o idioma Português (Brasil)
 const vozPadrao = 'Google português do Brasil';  // Nome da voz de português que você deseja usar
 
 // Função para carregar e listar todas as vozes no menu de vozes
