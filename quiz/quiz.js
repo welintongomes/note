@@ -1287,6 +1287,58 @@ function detectarIdiomaCategoria(categoria) {
     }
 }
 //fim funçao para descobrir o idioma que deve ser mostrado no modal
+const categoryLanguages = {
+    "HTML Básico": "pt-BR",
+    "JS Básico": "en-US",
+    "CSS Básico": "pt-BR",
+    "Espanhol Básico": "es-ES",
+    // Adicione outras categorias e idiomas aqui
+};
+
+function updateLanguageBasedOnCategory(selectedCategory) {
+    const idiomaSelect = document.getElementById("idioma");
+
+    // Verifica se há um idioma associado à categoria
+    if (categoryLanguages[selectedCategory]) {
+        idiomaSelect.value = categoryLanguages[selectedCategory];
+
+        // Dispara um evento para atualizar as vozes disponíveis
+        idiomaSelect.dispatchEvent(new Event("change"));
+    }
+}
+document.getElementById("categoria").addEventListener("change", function () {
+    const selectedCategory = this.value;
+
+    // Atualiza o idioma com base na categoria selecionada
+    updateLanguageBasedOnCategory(selectedCategory);
+
+    // Outras lógicas relacionadas à mudança de categoria
+});
+document.getElementById("idioma").addEventListener("change", function () {
+    const selectedLanguage = this.value;
+    const vozSelect = document.getElementById("voz");
+
+    // Limpa as opções atuais de voz
+    vozSelect.innerHTML = "";
+
+    // Obtém as vozes disponíveis no navegador
+    const availableVoices = speechSynthesis.getVoices();
+
+    // Filtra vozes pelo idioma selecionado
+    const filteredVoices = availableVoices.filter(voice => voice.lang === selectedLanguage);
+
+    // Adiciona vozes filtradas ao dropdown
+    filteredVoices.forEach(voice => {
+        const option = document.createElement("option");
+        option.value = voice.name;
+        option.textContent = voice.name;
+        vozSelect.appendChild(option);
+    });
+});
+window.speechSynthesis.onvoiceschanged = function () {
+    const idiomaSelect = document.getElementById("idioma");
+    idiomaSelect.dispatchEvent(new Event("change"));
+};
 // Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
 window.onload = function () {
     showTab('respostas');
