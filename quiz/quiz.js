@@ -1010,34 +1010,27 @@ function carregarVozes() {
 }
 
 // Função para atualizar as vozes com base no idioma selecionado
-function atualizarVozes(idiomaSelecionado) {
-    const vozSelect = document.getElementById("voz");
+function atualizarVozes() {
+    const idiomaSelecionado = idiomaSelect.value; // Exemplo: "pt" para português
+    
+    // Limpa o menu de vozes
+    vozSelect.innerHTML = '';
 
-    // Aguarda o carregamento das vozes
-    const vozesDisponiveis = speechSynthesis.getVoices();
+    // Filtra e adiciona as vozes no dropdown de acordo com o idioma selecionado
+    vozesDisponiveis
+        .filter(voz => voz.lang.startsWith(idiomaSelecionado)) // Mostra variantes do idioma selecionado
+        .forEach((voz) => {
+            const option = document.createElement("option");
+            option.value = voz.name;
+            option.textContent = `${voz.name} (${voz.lang})`;
+            vozSelect.appendChild(option);
+        });
 
-    // Filtra vozes pelo idioma
-    const vozesFiltradas = vozesDisponiveis.filter(voz => voz.lang === idiomaSelecionado);
-
-    // Atualiza o dropdown de vozes
-    vozSelect.innerHTML = "";
-    vozesFiltradas.forEach(voz => {
-        const option = document.createElement("option");
-        option.value = voz.name;
-        option.textContent = voz.name;
-        vozSelect.appendChild(option);
-    });
-
-    // Seleciona a primeira voz disponível como padrão
-    if (vozesFiltradas.length > 0) {
-        vozSelect.value = vozesFiltradas[0].name;
+    // Se o idioma for alterado, tenta selecionar a voz padrão
+    if (vozSelect.options.length > 0) {
+        vozSelect.value = vozPadrao; // Define a voz para 'Google português do Brasil' ou outra voz que você escolher
     }
 }
-window.speechSynthesis.onvoiceschanged = function () {
-    const idiomaSelect = document.getElementById("idioma");
-    atualizarVozes(idiomaSelect.value);
-};
-
 
 // Atualiza as vozes quando a lista mudar
 speechSynthesis.onvoiceschanged = carregarVozes;
@@ -1255,17 +1248,18 @@ function detectarIdiomaCategoria(categoria) {
 
 // Função para definir o idioma e voz com base na categoria atual
 function definirIdiomaPorCategoria() {
+    // Obter a categoria atual
     const categoriaAtual = document.getElementById("categoria-quiz").value.toLowerCase();
 
     // Mapeamento de idiomas por palavras-chave na categoria
     const idiomas = {
-        "inglês": "en-US",
-        "espanhol": "es-ES",
-        "português": "pt-BR"
+        "inglês": "en",  // Código para inglês
+        "espanhol": "es-US", // Código para espanhol
+        "português": "Google português do Brasil" // Código para português
     };
 
-    // Determinar o idioma com base na categoria
-    let idiomaSelecionado = "pt-BR"; // Padrão
+    // Iterar pelas palavras-chave para determinar o idioma
+    let idiomaSelecionado = idiomaPadrao; // Padrão: 'pt'
     for (const [palavraChave, codigoIdioma] of Object.entries(idiomas)) {
         if (categoriaAtual.includes(palavraChave)) {
             idiomaSelecionado = codigoIdioma;
@@ -1274,27 +1268,28 @@ function definirIdiomaPorCategoria() {
     }
 
     // Atualizar o idioma no dropdown de idiomas
-    const idiomaSelect = document.getElementById("idioma");
     idiomaSelect.value = idiomaSelecionado;
+    atualizarVozes(); // Atualiza as vozes com base no idioma selecionado
 
-    // Atualizar vozes disponíveis com base no idioma selecionado
-    atualizarVozes(idiomaSelecionado);
+    // Selecionar uma voz padrão para o idioma, se disponível
+    const vozPadrãoIdioma = vozesDisponiveis.find(voz => voz.lang.startsWith(idiomaSelecionado));
+    if (vozPadrãoIdioma) {
+        vozSelect.value = vozPadrãoIdioma.name;
+    }
 
-    console.log(`Idioma definido como "${idiomaSelecionado}".`);
+    console.log(`Idioma definido como "${idiomaSelecionado}" e voz como "${vozSelect.value}".`);
 }
-
 
 // Exemplo de chamada da função quando a categoria muda
 document.getElementById("categoria-quiz").addEventListener("change", definirIdiomaPorCategoria);
 
 // Chamar a função ao iniciar a página para ajustar o idioma e voz com base na categoria carregada
 // Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
-
-// Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
 window.onload = function () {
-    showTab('respostas'); // Carrega a aba inicial
-    definirIdiomaPorCategoria(); // Define o idioma inicial
+    showTab('respostas');
+    definirIdiomaPorCategoria();
 };
+
 
 //modal com confirmação
 function nextQuestion() {
