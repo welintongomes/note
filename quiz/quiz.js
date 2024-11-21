@@ -1289,9 +1289,9 @@ function detectarIdiomaCategoria(categoria) {
 //fim funçao para descobrir o idioma que deve ser mostrado no modal
 const categoryLanguages = {
     "HTML Básico": "pt-BR",
-    "JS Básico": "en-US",
+    "JS Básico": "en_US",
     "CSS Básico": "pt-BR",
-    "Espanhol Básico": "es-ES",
+    "Espanhol Básico": "es_US",
     // Adicione outras categorias e idiomas aqui
 };
 
