@@ -1826,9 +1826,9 @@ function definirIdiomaPorCategoria() {
 
     // Mapeamento de idiomas por palavras-chave na categoria
     const idiomas = {
-        "inglês": "en-US",  // Código para inglês
-        "espanhol": "es-US", // Código para espanhol
-        "português": "pt-BR" // Código para português
+        "inglês": "en",  // Código para inglês
+        "espanhol": "es", // Código para espanhol
+        "português": "pt" // Código para português
     };
 
     // Iterar pelas palavras-chave para determinar o idioma
