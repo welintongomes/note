@@ -1240,9 +1240,9 @@ function definirIdiomaPorCategoria() {
 
     // Mapeamento de idiomas por palavras-chave na categoria
     const idiomas = {
-        "inglês": "en-US",  // Código para inglês
-        "espanhol": "es-US", // Código para espanhol
-        "português": "pt_BR" // Código para português
+        "inglês": "en",  // Código para inglês
+        "espanhol": "es", // Código para espanhol
+        "português": "Google português do Brasil" // Código para português
     };
 
     // Iterar pelas palavras-chave para determinar o idioma
@@ -1271,9 +1271,11 @@ function definirIdiomaPorCategoria() {
 document.getElementById("categoria-quiz").addEventListener("change", definirIdiomaPorCategoria);
 
 // Chamar a função ao iniciar a página para ajustar o idioma e voz com base na categoria carregada
-// window.onload = function () {
-    
-// };
+// Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
+window.onload = function () {
+    showTab('respostas');
+    definirIdiomaPorCategoria();
+};
 //funçao para descobrir o idioma que deve ser mostrado no modal
 function detectarIdiomaCategoria(categoria) {
     if (categoria.toLowerCase().includes("inglês") || categoria.toLowerCase().includes("english")) {
@@ -1281,7 +1283,7 @@ function detectarIdiomaCategoria(categoria) {
     } else if (categoria.toLowerCase().includes("espanhol") || categoria.toLowerCase().includes("spanish")) {
         return 'es';
     } else {
-        return 'pt_BR'; // Padrão: Português
+        return 'pt'; // Padrão: Português
     }
 }
 //fim funçao para descobrir o idioma que deve ser mostrado no modal
