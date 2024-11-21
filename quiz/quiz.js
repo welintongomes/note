@@ -1010,27 +1010,34 @@ function carregarVozes() {
 }
 
 // Função para atualizar as vozes com base no idioma selecionado
-function atualizarVozes() {
-    const idiomaSelecionado = idiomaSelect.value; // Exemplo: "pt" para português
-    
-    // Limpa o menu de vozes
-    vozSelect.innerHTML = '';
+function atualizarVozes(idiomaSelecionado) {
+    const vozSelect = document.getElementById("voz");
 
-    // Filtra e adiciona as vozes no dropdown de acordo com o idioma selecionado
-    vozesDisponiveis
-        .filter(voz => voz.lang.startsWith(idiomaSelecionado)) // Mostra variantes do idioma selecionado
-        .forEach((voz) => {
-            const option = document.createElement("option");
-            option.value = voz.name;
-            option.textContent = `${voz.name} (${voz.lang})`;
-            vozSelect.appendChild(option);
-        });
+    // Aguarda o carregamento das vozes
+    const vozesDisponiveis = speechSynthesis.getVoices();
 
-    // Se o idioma for alterado, tenta selecionar a voz padrão
-    if (vozSelect.options.length > 0) {
-        vozSelect.value = vozPadrao; // Define a voz para 'Google português do Brasil' ou outra voz que você escolher
+    // Filtra vozes pelo idioma
+    const vozesFiltradas = vozesDisponiveis.filter(voz => voz.lang === idiomaSelecionado);
+
+    // Atualiza o dropdown de vozes
+    vozSelect.innerHTML = "";
+    vozesFiltradas.forEach(voz => {
+        const option = document.createElement("option");
+        option.value = voz.name;
+        option.textContent = voz.name;
+        vozSelect.appendChild(option);
+    });
+
+    // Seleciona a primeira voz disponível como padrão
+    if (vozesFiltradas.length > 0) {
+        vozSelect.value = vozesFiltradas[0].name;
     }
 }
+window.speechSynthesis.onvoiceschanged = function () {
+    const idiomaSelect = document.getElementById("idioma");
+    atualizarVozes(idiomaSelect.value);
+};
+
 
 // Atualiza as vozes quando a lista mudar
 speechSynthesis.onvoiceschanged = carregarVozes;
@@ -1233,49 +1240,6 @@ async function checkAnswer(selectedIndex) {
     loadNextQuestion(questions.filter(q => q.categoria === currentCategory));
 }
 
-// Função para definir o idioma e voz com base na categoria atual
-function definirIdiomaPorCategoria() {
-    // Obter a categoria atual
-    const categoriaAtual = document.getElementById("categoria-quiz").value.toLowerCase();
-
-    // Mapeamento de idiomas por palavras-chave na categoria
-    const idiomas = {
-        "inglês": "en",  // Código para inglês
-        "espanhol": "es", // Código para espanhol
-        "português": "Google português do Brasil" // Código para português
-    };
-
-    // Iterar pelas palavras-chave para determinar o idioma
-    let idiomaSelecionado = idiomaPadrao; // Padrão: 'pt'
-    for (const [palavraChave, codigoIdioma] of Object.entries(idiomas)) {
-        if (categoriaAtual.includes(palavraChave)) {
-            idiomaSelecionado = codigoIdioma;
-            break;
-        }
-    }
-
-    // Atualizar o idioma no dropdown de idiomas
-    idiomaSelect.value = idiomaSelecionado;
-    atualizarVozes(); // Atualiza as vozes com base no idioma selecionado
-
-    // Selecionar uma voz padrão para o idioma, se disponível
-    const vozPadrãoIdioma = vozesDisponiveis.find(voz => voz.lang.startsWith(idiomaSelecionado));
-    if (vozPadrãoIdioma) {
-        vozSelect.value = vozPadrãoIdioma.name;
-    }
-
-    console.log(`Idioma definido como "${idiomaSelecionado}" e voz como "${vozSelect.value}".`);
-}
-
-// Exemplo de chamada da função quando a categoria muda
-document.getElementById("categoria-quiz").addEventListener("change", definirIdiomaPorCategoria);
-
-// Chamar a função ao iniciar a página para ajustar o idioma e voz com base na categoria carregada
-// Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
-window.onload = function () {
-    showTab('respostas');
-    definirIdiomaPorCategoria();
-};
 //funçao para descobrir o idioma que deve ser mostrado no modal
 function detectarIdiomaCategoria(categoria) {
     if (categoria.toLowerCase().includes("inglês") || categoria.toLowerCase().includes("english")) {
@@ -1287,62 +1251,49 @@ function detectarIdiomaCategoria(categoria) {
     }
 }
 //fim funçao para descobrir o idioma que deve ser mostrado no modal
-const categoryLanguages = {
-    "HTML Básico": "pt-BR",
-    "JS Básico": "en_US",
-    "CSS Básico": "pt-BR",
-    "Espanhol Básico": "es_US",
-    // Adicione outras categorias e idiomas aqui
-};
 
-function updateLanguageBasedOnCategory(selectedCategory) {
-    const idiomaSelect = document.getElementById("idioma");
 
-    // Verifica se há um idioma associado à categoria
-    if (categoryLanguages[selectedCategory]) {
-        idiomaSelect.value = categoryLanguages[selectedCategory];
+// Função para definir o idioma e voz com base na categoria atual
+function definirIdiomaPorCategoria() {
+    const categoriaAtual = document.getElementById("categoria-quiz").value.toLowerCase();
 
-        // Dispara um evento para atualizar as vozes disponíveis
-        idiomaSelect.dispatchEvent(new Event("change"));
+    // Mapeamento de idiomas por palavras-chave na categoria
+    const idiomas = {
+        "inglês": "en-US",
+        "espanhol": "es-ES",
+        "português": "pt-BR"
+    };
+
+    // Determinar o idioma com base na categoria
+    let idiomaSelecionado = "pt-BR"; // Padrão
+    for (const [palavraChave, codigoIdioma] of Object.entries(idiomas)) {
+        if (categoriaAtual.includes(palavraChave)) {
+            idiomaSelecionado = codigoIdioma;
+            break;
+        }
     }
-}
-document.getElementById("categoria").addEventListener("change", function () {
-    const selectedCategory = this.value;
 
-    // Atualiza o idioma com base na categoria selecionada
-    updateLanguageBasedOnCategory(selectedCategory);
-
-    // Outras lógicas relacionadas à mudança de categoria
-});
-document.getElementById("idioma").addEventListener("change", function () {
-    const selectedLanguage = this.value;
-    const vozSelect = document.getElementById("voz");
-
-    // Limpa as opções atuais de voz
-    vozSelect.innerHTML = "";
-
-    // Obtém as vozes disponíveis no navegador
-    const availableVoices = speechSynthesis.getVoices();
-
-    // Filtra vozes pelo idioma selecionado
-    const filteredVoices = availableVoices.filter(voice => voice.lang === selectedLanguage);
-
-    // Adiciona vozes filtradas ao dropdown
-    filteredVoices.forEach(voice => {
-        const option = document.createElement("option");
-        option.value = voice.name;
-        option.textContent = voice.name;
-        vozSelect.appendChild(option);
-    });
-});
-window.speechSynthesis.onvoiceschanged = function () {
+    // Atualizar o idioma no dropdown de idiomas
     const idiomaSelect = document.getElementById("idioma");
-    idiomaSelect.dispatchEvent(new Event("change"));
-};
+    idiomaSelect.value = idiomaSelecionado;
+
+    // Atualizar vozes disponíveis com base no idioma selecionado
+    atualizarVozes(idiomaSelecionado);
+
+    console.log(`Idioma definido como "${idiomaSelecionado}".`);
+}
+
+
+// Exemplo de chamada da função quando a categoria muda
+document.getElementById("categoria-quiz").addEventListener("change", definirIdiomaPorCategoria);
+
+// Chamar a função ao iniciar a página para ajustar o idioma e voz com base na categoria carregada
+// Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
+
 // Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
 window.onload = function () {
-    showTab('respostas');
-    definirIdiomaPorCategoria();
+    showTab('respostas'); // Carrega a aba inicial
+    definirIdiomaPorCategoria(); // Define o idioma inicial
 };
 
 //modal com confirmação
