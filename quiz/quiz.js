@@ -1183,17 +1183,17 @@ async function checkAnswer(selectedIndex) {
         en: {
             correto: "Correct! The answer is:",
             errado: "Wrong! The correct answer is:",
-            descricao: "Description:"
+            //descricao: "Description:"
         },
         es: {
             correto: "¡Correcto! La respuesta es:",
             errado: "¡Incorrecto! La respuesta correcta es:",
-            descricao: "Descripción:"
+            //descricao: "Descripción:"
         },
         pt: {
             correto: "Correto! A resposta é:",
             errado: "Errado! A resposta correta é:",
-            descricao: "Descrição:"
+            //descricao: "Descrição:"
         }
     };
 
@@ -1202,11 +1202,11 @@ async function checkAnswer(selectedIndex) {
     if (selectedAnswer === respostaCorreta) {
         scores[currentCategory] = (scores[currentCategory] || 0) + 1; // Incrementa o score da categoria
         alertaSucesso();
-        await showModalMessage(`${mensagem.correto} ${currentQuestion.respostas[selectedIndex]}\n${mensagem.descricao} ${descricao}`,
+        await showModalMessage(`${mensagem.correto} ${currentQuestion.respostas[selectedIndex]}\n${descricao}`,
             'success');
     } else {
         alertaErro();
-        await showModalMessage(`${mensagem.errado} ${currentQuestion.respostas[options.indexOf(respostaCorreta)]}\n${mensagem.descricao} ${currentQuestion.descricaoRespostas[options.indexOf(respostaCorreta)]}`,
+        await showModalMessage(`${mensagem.errado} ${currentQuestion.respostas[options.indexOf(respostaCorreta)]}\n${currentQuestion.descricaoRespostas[options.indexOf(respostaCorreta)]}`,
             'error');
 
         const modoJogo = document.getElementById("modo-jogo").value;
@@ -1826,9 +1826,9 @@ function definirIdiomaPorCategoria() {
 
     // Mapeamento de idiomas por palavras-chave na categoria
     const idiomas = {
-        "inglês": "en",  // Código para inglês
-        "espanhol": "es", // Código para espanhol
-        "português": "pt" // Código para português
+        "inglês": "en-US",  // Código para inglês
+        "espanhol": "es-US", // Código para espanhol
+        "português": "pt-BR" // Código para português
     };
 
     // Iterar pelas palavras-chave para determinar o idioma
