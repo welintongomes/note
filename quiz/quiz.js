@@ -1233,6 +1233,64 @@ async function checkAnswer(selectedIndex) {
     loadNextQuestion(questions.filter(q => q.categoria === currentCategory));
 }
 
+// Função para definir o idioma e voz com base na categoria atual
+function definirIdiomaPorCategoria() {
+    // Obter a categoria atual
+    const categoriaAtual = document.getElementById("categoria-quiz").value.toLowerCase();
+
+    // Mapeamento de idiomas por palavras-chave na categoria
+    const idiomas = {
+        "inglês": "en-US",  // Código para inglês
+        "espanhol": "es-US", // Código para espanhol
+        "português": "pt_BR" // Código para português
+    };
+
+    // Iterar pelas palavras-chave para determinar o idioma
+    let idiomaSelecionado = idiomaPadrao; // Padrão: 'pt'
+    for (const [palavraChave, codigoIdioma] of Object.entries(idiomas)) {
+        if (categoriaAtual.includes(palavraChave)) {
+            idiomaSelecionado = codigoIdioma;
+            break;
+        }
+    }
+
+    // Atualizar o idioma no dropdown de idiomas
+    idiomaSelect.value = idiomaSelecionado;
+    atualizarVozes(); // Atualiza as vozes com base no idioma selecionado
+
+    // Selecionar uma voz padrão para o idioma, se disponível
+    const vozPadrãoIdioma = vozesDisponiveis.find(voz => voz.lang.startsWith(idiomaSelecionado));
+    if (vozPadrãoIdioma) {
+        vozSelect.value = vozPadrãoIdioma.name;
+    }
+
+    console.log(`Idioma definido como "${idiomaSelecionado}" e voz como "${vozSelect.value}".`);
+}
+
+// Exemplo de chamada da função quando a categoria muda
+document.getElementById("categoria-quiz").addEventListener("change", definirIdiomaPorCategoria);
+
+// Chamar a função ao iniciar a página para ajustar o idioma e voz com base na categoria carregada
+// window.onload = function () {
+    
+// };
+//funçao para descobrir o idioma que deve ser mostrado no modal
+function detectarIdiomaCategoria(categoria) {
+    if (categoria.toLowerCase().includes("inglês") || categoria.toLowerCase().includes("english")) {
+        return 'en';
+    } else if (categoria.toLowerCase().includes("espanhol") || categoria.toLowerCase().includes("spanish")) {
+        return 'es';
+    } else {
+        return 'pt_BR'; // Padrão: Português
+    }
+}
+//fim funçao para descobrir o idioma que deve ser mostrado no modal
+// Chama a função para exibir a aba "respostas" (Quiz) ao carregar a página elaserá a pagina inicial
+window.onload = function () {
+    showTab('respostas');
+    definirIdiomaPorCategoria();
+};
+
 //modal com confirmação
 function nextQuestion() {
     showConfirmationModal(
@@ -1819,55 +1877,3 @@ document.getElementById("toggleButton").addEventListener("click", function () {
     }
 });
 
-// Função para definir o idioma e voz com base na categoria atual
-function definirIdiomaPorCategoria() {
-    // Obter a categoria atual
-    const categoriaAtual = document.getElementById("categoria-quiz").value.toLowerCase();
-
-    // Mapeamento de idiomas por palavras-chave na categoria
-    const idiomas = {
-        "inglês": "en",  // Código para inglês
-        "espanhol": "es", // Código para espanhol
-        "português": "pt" // Código para português
-    };
-
-    // Iterar pelas palavras-chave para determinar o idioma
-    let idiomaSelecionado = idiomaPadrao; // Padrão: 'pt'
-    for (const [palavraChave, codigoIdioma] of Object.entries(idiomas)) {
-        if (categoriaAtual.includes(palavraChave)) {
-            idiomaSelecionado = codigoIdioma;
-            break;
-        }
-    }
-
-    // Atualizar o idioma no dropdown de idiomas
-    idiomaSelect.value = idiomaSelecionado;
-    atualizarVozes(); // Atualiza as vozes com base no idioma selecionado
-
-    // Selecionar uma voz padrão para o idioma, se disponível
-    const vozPadrãoIdioma = vozesDisponiveis.find(voz => voz.lang.startsWith(idiomaSelecionado));
-    if (vozPadrãoIdioma) {
-        vozSelect.value = vozPadrãoIdioma.name;
-    }
-
-    console.log(`Idioma definido como "${idiomaSelecionado}" e voz como "${vozSelect.value}".`);
-}
-
-// Exemplo de chamada da função quando a categoria muda
-document.getElementById("categoria-quiz").addEventListener("change", definirIdiomaPorCategoria);
-
-// Chamar a função ao iniciar a página para ajustar o idioma e voz com base na categoria carregada
-// window.onload = function () {
-    
-// };
-//funçao para descobrir o idioma que deve ser mostrado no modal
-function detectarIdiomaCategoria(categoria) {
-    if (categoria.toLowerCase().includes("inglês") || categoria.toLowerCase().includes("english")) {
-        return 'en';
-    } else if (categoria.toLowerCase().includes("espanhol") || categoria.toLowerCase().includes("spanish")) {
-        return 'es';
-    } else {
-        return 'pt'; // Padrão: Português
-    }
-}
-//fim funçao para descobrir o idioma que deve ser mostrado no modal
